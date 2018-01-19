@@ -1,0 +1,64 @@
+{
+  "name": "@parity/jsonrpc",
+  "description": "JSON and JS interface defintions for RPC",
+  "version": "2.1.4",
+  "main": "lib/index.js",
+  "author": "Parity Team <admin@parity.io>",
+  "maintainers": [
+    "Jaco Greeff",
+    "Maciej Hirsz"
+  ],
+  "contributors": [],
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paritytech/js-jsonrpc.git"
+  },
+  "keywords": [
+    "Ethereum",
+    "RPC",
+    "Parity"
+  ],
+  "engines": {
+    "node": ">=6.4"
+  },
+  "scripts": {
+    "build": "npm run build:js",
+    "build:js": "rm -rf lib && babel src --out-dir lib --ignore *.spec.js",
+    "build:json": "node scripts/build-rpc-json.js",
+    "build:markdown": "node scripts/build-rpc-markdown.js",
+    "ci:build": "npm run ci:parity && npm run build:js && npm run build:json && npm run build:markdown",
+    "ci:coveralls": "coveralls < coverage/lcov.info",
+    "ci:parity": "./scripts/checkout-parity.sh",
+    "ci:makeshift": "makeshift",
+    "lint": "npm run lint:css && npm run lint:js",
+    "lint:css": "echo \"WARN: npm run lint:css skipped\"",
+    "lint:js": "eslint src",
+    "test": "echo \"WARN: npm run test skipped\""
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "chalk": "^2.0.1",
+    "eslint": "^4.4.0",
+    "eslint-config-semistandard": "^11.0.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-standard-react": "^5.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "lodash": "^4.17.4",
+    "makeshift": "^1.1.0",
+    "mkdirp": "^0.5.1",
+    "yargs": "^8.0.2"
+  },
+  "dependencies": {}
+}
