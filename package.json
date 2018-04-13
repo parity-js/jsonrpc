@@ -1,7 +1,7 @@
 {
   "name": "@parity/jsonrpc",
   "description": "JSON and JS interface defintions for RPC",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "main": "lib/index.js",
   "author": "Parity Team <admin@parity.io>",
   "maintainers": [
