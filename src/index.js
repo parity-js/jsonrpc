@@ -19,7 +19,7 @@ const eth = require('./interfaces/eth');
 const net = require('./interfaces/net');
 const parity = require('./interfaces/parity');
 const personal = require('./interfaces/personal');
-const private = require('./interfaces/private');
+const privateMod = require('./interfaces/private');
 const shh = require('./interfaces/shh');
 const signer = require('./interfaces/signer');
 const trace = require('./interfaces/trace');
@@ -31,7 +31,7 @@ module.exports = {
   parity,
   net,
   personal,
-  private,
+  private: privateMod,
   shh,
   signer,
   trace,

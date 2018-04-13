@@ -46,8 +46,8 @@ module.exports = {
         desc: 'integer block number, or the string `\'latest\'`, `\'earliest\'`, see the [default block parameter](#the-default-block-parameter).',
         format: 'inputDefaultBlockNumberFormatter',
         example: fromDecimal(2)
-    },
-    {
+      },
+      {
         type: TransactionRequest,
         desc: 'The transaction object corresponding to the call',
         example: {
@@ -55,12 +55,12 @@ module.exports = {
           to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
           data: '0x41cd5add4fd13aedd64521e363ea279923575ff39718065d38bd46f0e6632e8e'
         }
-    }
+      }
     ],
     returns: {
-        type: Data,
-        desc: 'Result of the call',
-        example: '0x62e05075829655752e146a129a044ad72e95ce33e48ff48118b697e15e7b41e4'
+      type: Data,
+      desc: 'Result of the call',
+      example: '0x62e05075829655752e146a129a044ad72e95ce33e48ff48118b697e15e7b41e4'
     }
   }
 };

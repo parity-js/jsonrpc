@@ -129,7 +129,7 @@ PrivateTransactionResponse.details = {
     type: Quantity,
     desc: 'Status of the request.'
   }
-}
+};
 
 class TransactionResponse {}
 
