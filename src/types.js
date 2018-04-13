@@ -112,6 +112,25 @@ TransactionRequest.details = {
   }
 };
 
+class PrivateTransactionResponse {}
+
+PrivateTransactionResponse.print = '`Object`';
+
+PrivateTransactionResponse.details = {
+  transactionHash: {
+    type: Hash,
+    desc: '32 Bytes - hash of the transaction.'
+  },
+  contractAddress: {
+    type: Address,
+    desc: '20 Bytes - address of the public contract.'
+  },
+  status: {
+    type: Quantity,
+    desc: 'Status of the request.'
+  }
+}
+
 class TransactionResponse {}
 
 TransactionResponse.print = '`Object`';
