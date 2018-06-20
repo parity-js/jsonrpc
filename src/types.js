@@ -220,6 +220,21 @@ TransactionResponse.details = {
   }
 };
 
+class RichRawTransaction {}
+
+RichRawTransaction.print = '`Object`';
+
+RichRawTransaction.details = {
+  raw: {
+    type: Data,
+    desc: 'The signed, RLP encoded transaction.'
+  },
+  tx: {
+    type: TransactionRequest,
+    desc: 'Transaction object.'
+  }
+};
+
 module.exports = {
   Address,
   Data,
@@ -230,5 +245,6 @@ module.exports = {
   BlockNumber,
   CallRequest,
   TransactionRequest,
-  TransactionResponse
+  TransactionResponse,
+  RichRawTransaction
 };
