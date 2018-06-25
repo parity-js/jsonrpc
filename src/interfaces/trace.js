@@ -310,6 +310,51 @@ then it should look something like:
       }
     },
 
+    callMany: {
+      section: SECTION_ADHOC,
+      desc: 'Executes all given calls and returns a number of possible traces for each of it.',
+      params: [
+        {
+          type: Array,
+          desc: 'Call options and type of trace',
+          example: [
+            new Dummy('{ ... }'),
+            new Dummy('{ ... }')
+          ]
+        },
+        {
+          type: BlockNumber,
+          optional: true,
+          desc: 'Integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`.'
+        }
+      ],
+      returns: {
+        type: Array,
+        desc: 'Block traces',
+        example: [
+          {
+            output: '0x',
+            stateDiff: null,
+            trace: [
+              {
+                action: new Dummy('{ ... }'),
+                result: {
+                  gasUsed: '0x0',
+                  output: '0x'
+                },
+                subtraces: 0,
+                traceAddress: [],
+                type: 'call'
+              }
+            ],
+            vmTrace: null
+          },
+          new Dummy('{ ... }'),
+          new Dummy('{ ... }')
+        ]
+      }
+    },
+
     rawTransaction: {
       section: SECTION_ADHOC,
       desc: 'Traces a call to `eth_sendRawTransaction` without making the call, returning the traces',
@@ -356,6 +401,44 @@ then it should look something like:
           type: Hash,
           desc: 'Transaction hash.',
           example: '0x02d4a872e096445e80d05276ee756cefef7f3b376bcec14246469c0cd97dad8f'
+        },
+        {
+          type: Array,
+          desc: 'Type of trace, one or more of: `"vmTrace"`, `"trace"`, `"stateDiff"`.',
+          example: ['trace']
+        }
+      ],
+      returns: {
+        type: Object,
+        desc: 'Block traces.',
+        example: {
+          output: '0x',
+          stateDiff: null,
+          trace: [
+            {
+              action: new Dummy('{ ... }'),
+              result: {
+                gasUsed: '0x0',
+                output: '0x'
+              },
+              subtraces: 0,
+              traceAddress: [],
+              type: 'call'
+            }
+          ],
+          vmTrace: null
+        }
+      }
+    },
+
+    replayBlockTransactions: {
+      section: SECTION_ADHOC,
+      desc: 'Executes all the transactions at the given block and returns a number of possible traces for each transaction.',
+      params: [
+        {
+          type: BlockNumber,
+          desc: 'Integer of a block number, or the string \'earliest\', \'latest\' or \'pending\'.',
+          example: '0x2ed119'
         },
         {
           type: Array,
