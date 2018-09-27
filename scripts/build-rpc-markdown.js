@@ -266,7 +266,7 @@ Object.keys(interfaces).sort().forEach((group) => {
 });
 
 Object.keys(interfaces).sort().forEach((group) => {
-  let preamble = `# The \`${group}\` Module`;
+  let preamble = `---\ntitle: The \`${group}\` Module\n---`;
   let markdown = `## JSON-RPC methods\n`;
 
   const spec = interfaces[group];
