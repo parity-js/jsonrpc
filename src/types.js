@@ -28,7 +28,7 @@ class Quantity {}
 
 class BlockNumber {}
 
-BlockNumber.print = '`Quantity` | `Tag`';
+BlockNumber.print = '`Quantity` or `Tag`';
 
 class CallRequest {}
 
