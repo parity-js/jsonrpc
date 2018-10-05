@@ -57,6 +57,7 @@ module.exports = {
   },
 
   chainId: {
+    section: SECTION_NET,
     desc: 'Returns the current chain ID used for tranaction signing.',
     params: [],
     returns: {

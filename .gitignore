@@ -3,3 +3,4 @@ docs
 node_modules
 lib
 release
+push.sh

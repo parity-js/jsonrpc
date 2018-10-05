@@ -193,6 +193,7 @@ function buildExample (name, method) {
 
   const hasReqExample = method.params.every(hasExample);
   const hasResExample = hasExample(method.returns);
+  const isPubSubApi = method.pubsub !== undefined && method.pubsub;
 
   if (!hasReqExample && !hasResExample) {
     error(`${name} has no examples${logPostfix}`);
@@ -206,8 +207,12 @@ function buildExample (name, method) {
     const params = getExample(method.params);
     const req = Dummy.stringifyJSON(Object.assign({}, rpcReqTemplate, { method: name, params }));
 
-    examples.push(`Request\n\`\`\`bash\ncurl --data '${req}' -H "Content-Type: application/json" -X POST localhost:8545\n\`\`\``);
-  } else {
+    if (isPubSubApi){
+      examples.push(`Request\n\`\`\`bash\nwscat -c localhost:8546\n>${req}\n\`\`\``);    
+    } else {
+      examples.push(`Request\n\`\`\`bash\ncurl --data '${req}' -H "Content-Type: application/json" -X POST localhost:8545\n\`\`\``);    
+    }
+ } else {
     warn(`${name} has a response example but not a request example${logPostfix}`);
   }
 
