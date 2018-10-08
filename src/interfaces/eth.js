@@ -1299,7 +1299,7 @@ The following options are possible for the \`defaultBlock\` parameter:
 Starts a subscription (on WebSockets / IPC / TCP transports) to a particular event. For every event that
 matches the subscription a JSON-RPC notification with event details and subscription ID will be sent to a client.
 
-Below examples use \`wscat\`, a simple command line WebSocket client. Find out how to install and use it by visiting [wscat GitHub repository](https://github.com/websockets/wscat).
+Below examples use \`wscat\`, a simple command line WebSockets client. Find out how to install and use it by visiting [wscat GitHub repository](https://github.com/websockets/wscat).
 
 An example notification received by subscribing to \`newHeads\` event:
 \`\`\`js

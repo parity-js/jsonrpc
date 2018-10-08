@@ -1926,11 +1926,15 @@ module.exports = {
   // Pub-Sub
   subscribe: {
     subdoc: SUBDOC_PUBSUB,
+    pubsub: true,
     desc: `
 Starts a subscription (on WebSockets / IPC / TCP transports) to results of calling some other RPC method.
 For every change in returned value of that RPC call a JSON-RPC notification with result and subscription ID will be sent to a client.
 
-An example notification received by subscribing to \`eth_accounts\` RPC method:
+
+Below examples use \`wscat\`, a simple command line WebSockets client. Find out how to install and use it by visiting [wscat GitHub repository](https://github.com/websockets/wscat).
+
+An example notification received by subscribing to \`eth_getBalance\` RPC method:
 \`\`\`
 {"jsonrpc":"2.0","method":"parity_subscription","params":{"subscription":"0x416d77337e24399d","result":["0xcd2a3d9f938e13cd947ec05abc7fe734df8dd826"]}}
 \`\`\`
@@ -1958,6 +1962,7 @@ connection, disconnecting causes all subscriptions to be canceled.
   },
   unsubscribe: {
     subdoc: SUBDOC_PUBSUB,
+    pubsub: true,
     desc: 'Unsubscribes from a subscription.',
     params: [{
       type: String,
