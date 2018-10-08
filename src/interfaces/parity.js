@@ -58,11 +58,11 @@ module.exports = {
 
   chainId: {
     section: SECTION_NET,
-    desc: 'Returns the current chain ID used for tranaction signing.',
+    desc: 'Returns the EIP155 chain ID used for transaction signing at the current best block. Null is returned if not available.',
     params: [],
     returns: {
       type: Quantity,
-      desc: 'The current blockchain chain ID',
+      desc: 'EIP155 Chain ID, or `null` if not available.',
       example: '0x1'
     }
   },
@@ -86,7 +86,7 @@ module.exports = {
 
   changeVault: {
     section: SECTION_VAULT,
-    desc: 'Changes the current valut for the account',
+    desc: 'Changes the current vault for the account',
     params: [
       {
         type: Address,
@@ -152,37 +152,6 @@ module.exports = {
       type: Object,
       desc: 'or `String` - Either `"capable"`, `{"capableUntil":N}`, `{"incapableSince":N}` or `"unknown"` (`N` is a block number).',
       example: 'capable'
-    }
-  },
-
-  dappsList: {
-    subdoc: SUBDOC_SET,
-    desc: 'Returns a list of available local dapps.',
-    params: [],
-    returns: {
-      type: Array,
-      desc: 'The list of dapps',
-      example: [
-        {
-          author: 'Parity Technologies Ltd',
-          description: 'A skeleton dapp',
-          iconUrl: 'title.png',
-          id: 'skeleton',
-          name: 'Skeleton',
-          version: '0.1'
-        }
-      ]
-    }
-  },
-
-  dappsUrl: {
-    section: SECTION_NODE,
-    desc: 'Returns the hostname and the port of dapps/rpc server, error if not enabled.',
-    params: [],
-    returns: {
-      type: String,
-      desc: 'The hostname and port number',
-      example: 'localhost:8545'
     }
   },
 
@@ -360,37 +329,6 @@ module.exports = {
     }
   },
 
-  lockedHardwareAccountsInfo: {
-    desc: 'Provides a list of paths to locked hardware wallets',
-    params: [],
-    returns: {
-      type: Array,
-      desc: 'Paths of all locked hardware wallets',
-      example: "['/dev/hidraw0']"
-    }
-  },
-
-  hardwarePinMatrixAck: {
-    desc: 'Send a pin to a hardware wallet at a specific path to unlock it',
-    params: [
-      {
-        type: String,
-        desc: 'path to the device',
-        example: 'USB_2b24_0001_14100000'
-      },
-      {
-        type: String,
-        desc: 'the pin as recieved from the pin matrix',
-        example: '1234'
-      }
-    ],
-    returns: {
-      type: Boolean,
-      desc: 'Whether or not the pin entry successfully unlocked the device',
-      example: true
-    }
-  },
-
   listOpenedVaults: {
     desc: 'Returns a list of all opened vaults',
     params: [],
@@ -449,7 +387,26 @@ module.exports = {
       }
     }
   },
-
+  hardwarePinMatrixAck: {
+    desc: 'Send a pin to a hardware wallet at a specific path to unlock it',
+    params: [
+      {
+        type: String,
+        desc: 'path to the device',
+        example: 'USB_2b24_0001_14100000'
+      },
+      {
+        type: String,
+        desc: 'the pin as recieved from the pin matrix',
+        example: '1234'
+      }
+    ],
+    returns: {
+      type: Boolean,
+      desc: 'Whether or not the pin entry successfully unlocked the device',
+      example: true
+    }
+  },
   minGasPrice: {
     section: SECTION_MINING,
     desc: 'Returns currently set minimal gas price',
@@ -521,7 +478,7 @@ module.exports = {
 
   netPeers: {
     section: SECTION_NET,
-    desc: 'Returns number of peers.',
+    desc: 'Returns connected peers. Peers with non-empty protocols have completed handshake.',
     params: [],
     returns: {
       type: Object,
@@ -989,7 +946,7 @@ module.exports = {
   },
 
   futureTransactions: {
-    desc: 'Returns all future transactions from transaction queue.',
+    desc: '**This method is deprecated in favor of [parity_allTransactions](#parity_allTransactions)** \n\n Returns all future transactions from transaction queue.',
     params: [],
     returns: {
       type: Array,
@@ -1024,7 +981,40 @@ module.exports = {
       ]
     }
   },
-
+  allTransactions: {
+    desc: 'Returns all the transactions from the transaction queue.',
+    params: [],
+    returns: {
+      type: Array,
+      desc: 'Transaction list.',
+      details: TransactionResponse.details,
+      example: [
+        {
+        "blockHash": null,
+        "blockNumber": null,
+        "chainId": null,
+        "condition": null,
+        "creates": null,
+        "from": "0x5f3dffcf347944d3739b0805c934d86c8621997f",
+        "gas": "0x493e0",
+        "gasPrice": "0x12a05f200",
+        "hash": "0x045301a128ffcb4662dd199d1176bdf4cc9f0628e10d6bf120edfb52e3e39a78",
+        "input": "0x13f56f730...f3b4dc000",
+        "nonce": "0x577",
+        "publicKey": "0x3bb...9ce1b1",
+        "r": "0x6fd2c7a5dbb8795038ca258196083b3eabe15a20e3020c3f45e88f2e447be410",
+        "raw": "0xf88b8247d202...83eef3f8916bb818ce7",
+        "s": "0x5993992c547d20234aabfc8c32a58d25784255fef500383eef3f8916bb818ce7",
+        "standardV": "0x0",
+        "to": "0xe8b2d01ffa0a15736b2370b6e5064f9702c891b6",
+        "transactionIndex": null,
+        "v": "0x1b",
+        "value": "0x0"
+        },
+        new Dummy('{ ... }, { ... }, ...')
+      ]
+    }
+  },
   /*
    * `parity_accounts` module methods
    * ================================
@@ -1698,7 +1688,7 @@ module.exports = {
    */
   postSign: {
     section: SECTION_ACCOUNTS,
-    desc: 'Request an arbitrary transaction to be signed by an account.',
+    desc: 'Request a standard Ethereum message to be signed by an account.',
     params: [
       {
         type: Address,
@@ -1706,14 +1696,14 @@ module.exports = {
         example: '0xb60e8dd61c5d32be8058bb8eb970870f07233155'
       },
       {
-        type: Hash,
-        desc: 'Transaction hash.',
-        example: '0x8cda01991ae267a539135736132f1f987e76868ce0269b7537d3aab37b7b185e'
+        type: Data,
+        desc: 'The message',
+        example: '0x414243'
       }
     ],
     returns: {
       type: Quantity,
-      desc: 'The id of the request to the signer. If the account was already unlocked, returns `Hash` of the transaction instead.',
+      desc: 'The id of the request to the signer.',
       example: '0x1'
     }
   },
@@ -1858,7 +1848,7 @@ module.exports = {
     params: [
       {
         type: BlockNumber,
-        desc: 'integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`, as in the [default block parameter](#the-default-block-parameter).',
+        desc: 'integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`, as in the default block parameter.',
         example: fromDecimal(436)
       }
     ],
@@ -1888,7 +1878,35 @@ module.exports = {
       }
     }
   },
-
+  lockedHardwareAccountsInfo: {
+    desc: 'Provides a list of paths to locked hardware wallets',
+    params: [],
+    returns: {
+      type: Array,
+      desc: 'Paths of all locked hardware wallets',
+      example: "['/dev/hidraw0']"
+    }
+  },
+    hardwarePinMatrixAck: {
+    desc: 'Send a pin to a hardware wallet at a specific path to unlock it',
+    params: [
+      {
+        type: String,
+        desc: 'path to the device',
+        example: 'USB_2b24_0001_14100000'
+      },
+      {
+        type: String,
+        desc: 'the pin as recieved from the pin matrix',
+        example: '1234'
+      }
+    ],
+    returns: {
+      type: Boolean,
+      desc: 'Whether or not the pin entry successfully unlocked the device',
+      example: true
+    }
+  },
   cidV0: {
     desc: 'Compute a v0 IPFS Content ID from protobuf encoded bytes.',
     params: [
