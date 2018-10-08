@@ -1575,7 +1575,7 @@ module.exports = {
       {
         type: String,
         desc: 'The url of the content.',
-        example: 'https://raw.githubusercontent.com/paritytech/parity/master/README.md'
+        example: 'https://raw.githubusercontent.com/paritytech/parity-ethereum/master/README.md'
       }
     ],
     returns: {
@@ -1621,7 +1621,7 @@ module.exports = {
 
   setEngineSigner: {
     subdoc: SUBDOC_SET,
-    desc: 'Sets an authority account for signing consensus messages. For more information check the [[Proof of Authority Chains]] page.',
+    desc: 'Sets an authority account for signing consensus messages. For more information check the [Proof of Authority Chains](Proof-of-Authority-Chains.md) page.',
     params: [
       {
         type: Address,

@@ -17,6 +17,28 @@
 const { Address, Data, Quantity, TransactionRequest } = require('../types');
 
 module.exports = {
+  
+ecRecover: {
+    desc: 'Returns the address associated with the private key that was used to calculate the signature in `personal_sign`.',
+    params: [
+      {
+        type: Data,
+        desc: 'The data which hash was signed.',
+        example: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675'
+      },
+      {
+        type: Data,
+        desc: 'Signed data.',
+        example: '0xe7225f986f192f859a9bf84e34b2b7001dfa11aeb5c7164f81a2bee0d79943e2587be1faa11502eba0f803bb0ee071a082b6fe40fba025f3309263a1eef52c711c'
+      }
+    ],
+    returns: {
+      type: Address,
+      desc: 'Address of the signer of the message.',
+      example: "0xb60e8dd61c5d32be8058bb8eb970870f07233155"
+    }
+  },
+
   listAccounts: {
     desc: 'Lists all stored accounts.',
     params: [],
@@ -69,6 +91,82 @@ module.exports = {
       type: Data,
       desc: '32 Bytes - the transaction hash, or the zero hash if the transaction is not yet available',
       example: '0x62e05075829655752e146a129a044ad72e95ce33e48ff48118b697e15e7b41e4'
+    }
+  },
+  signTransaction: {
+    desc: 'Signs a transaction without dispatching it to the network. It can later be submitted using `eth_sendRawTransaction`. The account does not need to be unlocked to make this call, and will not be left unlocked after.',
+    params: [
+      {
+        type: TransactionRequest,
+        desc: 'The transaction object',
+        example: {
+          from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+          to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+          data: '0x41cd5add4fd13aedd64521e363ea279923575ff39718065d38bd46f0e6632e8e',
+          value: '0x186a0'
+        }
+      },
+      {
+        type: String,
+        desc: 'Passphrase to unlock the `from` account.',
+        example: 'hunter2'
+      }
+    ],
+    returns: {
+      type: Object,
+      desc: 'Signed transaction and its details:',
+      details: {
+        raw: {
+          type: Data,
+          desc: 'The signed, RLP encoded transaction.'
+        },
+        tx: {
+          type: TransactionRequest,
+          desc: 'Transaction object.'
+        },
+      },
+      example: {
+        raw: "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
+        tx: {
+          "hash": "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+          "nonce": "0x0",
+          "blockHash": "0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b",
+          "blockNumber": "0x15df",
+          "transactionIndex": "0x1",
+          "from": "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+          "to": "0x853f43d8a49eeb85d32cf465507dd71d507100c1",
+          "value": "0x7f110",
+          "gas": "0x7f110",
+          "gasPrice": "0x09184e72a000",
+          "input": "0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360"
+        }
+      }
+    } 
+  },
+
+  sign: {
+    desc: 'Calculates an Ethereum specific signature with: `sign(keccak256("Ethereum Signed Message: " + len(message) + message)))`.',
+    params: [
+      {
+        type: Data,
+        desc: 'The transaction object',
+        example: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675'
+      },
+      {
+        type: Address,
+        desc: '20 Bytes - The address of the account to sign with',
+        example: '0xb60e8dd61c5d32be8058bb8eb970870f07233155'
+      },
+      {
+        type: String,
+        desc: 'Passphrase to unlock the `from` account.',
+        example: 'hunter'
+      }
+    ],
+    returns: {
+      type: Data,
+      desc: 'Signed data.',
+      example: "0xe7225f986f192f859a9bf84e34b2b7001dfa11aeb5c7164f81a2bee0d79943e2587be1faa11502eba0f803bb0ee071a082b6fe40fba025f3309263a1eef52c711c"
     }
   },
 
