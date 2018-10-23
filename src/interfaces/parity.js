@@ -1591,7 +1591,7 @@ module.exports = {
     params: [
       {
         type: String,
-        desc: 'Chain spec name, one of: "foundation", "ropsten", "morden", "kovan", "olympic", "classic", "dev", "expanse", "musicoin" or a filename.',
+        desc: 'Chain spec name, one of: "foundation", "ropsten", "morden", "kovan", "classic", "dev", "expanse", "musicoin" or a filename.',
         example: 'foundation'
       }
     ],
