@@ -230,5 +230,6 @@ module.exports = {
   BlockNumber,
   CallRequest,
   TransactionRequest,
-  TransactionResponse
+  TransactionResponse,
+  PrivateTransactionResponse
 };
