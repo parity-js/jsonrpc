@@ -14,29 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-const { Data, BlockNumber, TransactionRequest, PrivateTransactionResponse } = require('../types');
+const { Address, Data, BlockNumber, TransactionRequest, PrivateTransactionResponse } = require('../types');
 const { fromDecimal } = require('../helpers');
 
 module.exports = {
-  sendTransaction: {
-    desc: 'Make an onchain call to the private contract in order to modify its state.',
-    params: [
-      {
-        type: Data,
-        desc: 'Signed regular transaction',
-        example: '0xf8840180830e57e094cd96d189596c690ff983e4e14d1838d0305186dc80a4bc64b76d2a0000000000000000000000000000000000000000000000000000000000000045a00b3aa43f869f087a3aec97ba4232b15f9f0ab964c17953ca556b944e424d1f84a058d6edf93ad3c2bb0f0513e9ef391bbe8f7400668aaa51344ee4bf1a587e0218'
-      }
-    ],
-    returns: {
-      type: PrivateTransactionResponse,
-      desc: 'Response object describing the result of the call',
-      example: {
-        transactionHash: '0x63c715e88f7291e66069302f6fcbb4f28a19ef5d7cbd1832d0c01e221c0061c6',
-        contractAddress: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-        status: fromDecimal(0)
-      }
-    }
-  },
   composeDeploymentTransaction: {
     desc: 'Crafts a specific transaction wrapping a private contract inside a public contract. The resulting transaction is later expected to be signed and broadcasted.',
     params: [
@@ -86,6 +67,25 @@ module.exports = {
       }
     }
   },
+  sendTransaction: {
+    desc: 'Make an onchain call to the private contract in order to modify its state.',
+    params: [
+      {
+        type: Data,
+        desc: 'Signed regular transaction',
+        example: '0xf8840180830e57e094cd96d189596c690ff983e4e14d1838d0305186dc80a4bc64b76d2a0000000000000000000000000000000000000000000000000000000000000045a00b3aa43f869f087a3aec97ba4232b15f9f0ab964c17953ca556b944e424d1f84a058d6edf93ad3c2bb0f0513e9ef391bbe8f7400668aaa51344ee4bf1a587e0218'
+      }
+    ],
+    returns: {
+      type: PrivateTransactionResponse,
+      desc: 'Response object describing the result of the call',
+      example: {
+        transactionHash: '0x63c715e88f7291e66069302f6fcbb4f28a19ef5d7cbd1832d0c01e221c0061c6',
+        contractAddress: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        status: fromDecimal(0)
+      }
+    }
+  },
   call: {
     desc: 'Make an local call to the private contract (without its state modification).',
     params: [
@@ -109,6 +109,21 @@ module.exports = {
       type: Data,
       desc: 'Result of the call',
       example: '0x62e05075829655752e146a129a044ad72e95ce33e48ff48118b697e15e7b41e4'
+    }
+  },
+  contractKey:{
+    desc: " Returns the Secret Store Document key id associated with the deployed public contract.",
+    params: [
+      {
+       type: Address,
+       desc: "20 Bytes - Address of the private contract",
+       example: "0x4466399893d182dcbe43c2a5a79db93b52ed26ae" 
+      }
+    ],
+    returns: {
+      type: Data,
+      desc: "20 Bytes - Document key id associated with the deployed public contract.",
+      example: "0x0000000000000000000000004466399893d182dcbe43c2a5a79db93b52ed26ae"
     }
   }
 };
