@@ -189,19 +189,9 @@ module.exports = {
     }
   },
 
-  signerEnabled: {
-    nodoc: 'Not present in Rust code',
-    desc: 'Returns whether signer is enabled/disabled.',
-    params: [],
-    returns: {
-      type: Boolean,
-      desc: '`true` when enabled, `false` when disabled.',
-      example: true
-    }
-  },
-
   // Pub-Sub
   subscribePending: {
+    pubsub: true,
     desc: `
 Starts a subscription for transactions in the confirmation queue.
 Each event contains all transactions currently in the queue.
@@ -222,6 +212,7 @@ connection, disconnecting causes all subscriptions to be canceled.
     }
   },
   unsubscribePending: {
+    pubsub: true,
     desc: 'Unsubscribes from pending transactions subscription.',
     params: [{
       type: String,

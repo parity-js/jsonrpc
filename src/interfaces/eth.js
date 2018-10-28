@@ -18,182 +18,7 @@ const { Address, BlockNumber, Data, Hash, Quantity, CallRequest, TransactionRequ
 const { withPreamble, fromDecimal, withComment, Dummy } = require('../helpers');
 
 const SUBDOC_PUBSUB = 'pubsub';
-
-module.exports = withPreamble(`
-
-## The default block parameter
-
-The following methods have an optional extra \`defaultBlock\` parameter:
-
-- [eth_estimateGas](#eth_estimategas)
-- [eth_getBalance](#eth_getbalance)
-- [eth_getCode](#eth_getcode)
-- [eth_getTransactionCount](#eth_gettransactioncount)
-- [eth_getStorageAt](#eth_getstorageat)
-- [eth_call](#eth_call)
-
-When requests are made that act on the state of Ethereum, the last parameter determines the height of the block.
-
-The following options are possible for the \`defaultBlock\` parameter:
-
-- \`Quantity\`/\`Integer\` - an integer block number;
-- \`String "earliest"\` - for the earliest/genesis block;
-- \`String "latest"\` - for the latest mined block;
-- \`String "pending"\` - for the pending state/transactions.
-
-`, {
-    accounts: {
-      desc: 'Returns a list of addresses owned by client.',
-      params: [],
-      returns: {
-        type: Array,
-        desc: '20 Bytes - addresses owned by the client.',
-        example: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1']
-      }
-    },
-
-    blockNumber: {
-      desc: 'Returns the number of most recent block.',
-      params: [],
-      returns: {
-        type: Quantity,
-        desc: 'integer of the current block number the client is on.',
-        example: fromDecimal(1207)
-      }
-    },
-
-    call: {
-      desc: 'Executes a new message call immediately without creating a transaction on the block chain.',
-      params: [
-        {
-          type: CallRequest,
-          desc: 'The transaction call object.',
-          format: 'inputCallFormatter',
-          example: {
-            from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-            to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-            value: fromDecimal(100000)
-          }
-        },
-        {
-          type: BlockNumber,
-          desc: 'Integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
-          format: 'inputDefaultBlockNumberFormatter',
-          optional: true
-        }
-      ],
-      returns: {
-        type: Data,
-        desc: 'the return value of executed contract.',
-        example: '0x'
-      }
-    },
-
-    coinbase: {
-      desc: 'Returns the client coinbase address.',
-      params: [],
-      returns: {
-        type: Address,
-        desc: 'The current coinbase address.',
-        example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
-      }
-    },
-
-    estimateGas: {
-      desc: 'Makes a call or transaction, which won\'t be added to the blockchain and returns the used gas, which can be used for estimating the used gas.',
-      params: [
-        {
-          type: CallRequest,
-          desc: 'Same as [eth_call](#eth_call) parameters, except that all properties are optional.',
-          format: 'inputCallFormatter',
-          example: new Dummy('{ ... }')
-        },
-        {
-          type: BlockNumber,
-          desc: 'Integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
-          format: 'inputDefaultBlockNumberFormatter',
-          optional: true
-        }
-      ],
-      returns: {
-        type: Quantity,
-        desc: 'The amount of gas used.',
-        format: 'utils.toDecimal',
-        example: fromDecimal(21000)
-      }
-    },
-
-    fetchQueuedTransactions: {
-      nodoc: 'Not present in Rust code',
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
-      }
-    },
-
-    flush: {
-      nodoc: 'Not present in Rust code',
-      desc: '?',
-      params: [],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
-      }
-    },
-
-    gasPrice: {
-      desc: 'Returns the current price per gas in wei.',
-      params: [],
-      returns: {
-        type: Quantity,
-        desc: 'integer of the current gas price in wei.',
-        example: fromDecimal(10000000000000)
-      }
-    },
-
-    getBalance: {
-      desc: 'Returns the balance of the account of given address.',
-      params: [
-        {
-          type: Address,
-          desc: '20 Bytes - address to check for balance.',
-          format: 'inputAddressFormatter',
-          example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
-        },
-        {
-          type: BlockNumber,
-          desc: 'integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
-          format: 'inputDefaultBlockNumberFormatter',
-          optional: true
-        }
-      ],
-      returns: {
-        type: Quantity,
-        desc: 'integer of the current balance in wei.',
-        format: 'outputBigNumberFormatter',
-        example: '0x0234c8a3397aab58'
-      }
-    },
-
-    getBlockByHash: {
-      desc: 'Returns information about a block by hash.',
-      params: [
-        {
-          type: Hash,
-          desc: 'Hash of a block.',
-          example: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'
-        },
-        {
-          type: Boolean,
-          desc: 'If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.',
-          example: true
-        }
-      ],
-      returns: {
+const BLOCK = {
         type: Object,
         desc: 'A block object, or `null` when no block was found.',
         details: {
@@ -299,6 +124,259 @@ The following options are possible for the \`defaultBlock\` parameter:
           uncles: ['0x1606e5...', '0xd5145a9...']
         }
       }
+
+const TRANSACTION = {
+  type: Object,
+  desc: 'A transaction object, or `null` when no transaction was found:',
+  format: 'outputTransactionFormatter',
+  details: {
+    hash: {
+      type: Hash,
+      desc: '32 Bytes - hash of the transaction.'
+    },
+    nonce: {
+      type: Quantity,
+      desc: 'the number of transactions made by the sender prior to this one.'
+    },
+    blockHash: {
+      type: Hash,
+      desc: '32 Bytes - hash of the block where this transaction was in. `null` when its pending.'
+    },
+    blockNumber: {
+      type: BlockNumber,
+      desc: 'block number where this transaction was in. `null` when its pending.'
+    },
+    transactionIndex: {
+      type: Quantity,
+      desc: 'integer of the transactions index position in the block. `null` when its pending.'
+    },
+    from: {
+      type: Address,
+      desc: '20 Bytes - address of the sender.'
+    },
+    to: {
+      type: Address,
+      desc: '20 Bytes - address of the receiver. `null` when its a contract creation transaction.'
+    },
+    value: {
+      type: Quantity,
+      desc: 'value transferred in Wei.'
+    },
+    gasPrice: {
+      type: Quantity,
+      desc: 'gas price provided by the sender in Wei.'
+    },
+    gas: {
+      type: Quantity,
+      desc: 'gas provided by the sender.'
+    },
+    input: {
+      type: Data,
+      desc: 'the data send along with the transaction.'
+    },
+    v: {
+      type: Quantity,
+      desc: 'the standardised V field of the signature.'
+    },
+    standard_v: {
+      type: Quantity,
+      desc: 'the standardised V field of the signature (0 or 1).'
+    },
+    r: {
+      type: Quantity,
+      desc: 'the R field of the signature.'
+    },
+    raw: {
+      type: Data,
+      desc: 'raw transaction data'
+    },
+    publicKey: {
+      type: Hash,
+      desc: 'public key of the signer.'
+    },
+    chainId: {
+      type: Quantity,
+      desc: 'the chain id of the transaction, if any.'
+    },
+    creates: {
+      type: Hash,
+      desc: 'creates contract hash'
+    },
+    condition: {
+      type: Object,
+      optional: true,
+      desc: 'conditional submission, Block number in `block` or timestamp in `time` or `null`. (parity-feature)'
+    }
+  },
+  example: {
+    hash: '0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b',
+    nonce: fromDecimal(0),
+    blockHash: '0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b',
+    blockNumber: fromDecimal(5599),
+    transactionIndex: fromDecimal(1),
+    from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+    to: '0x853f43d8a49eeb85d32cf465507dd71d507100c1',
+    value: fromDecimal(520464),
+    gas: fromDecimal(520464),
+    gasPrice: '0x09184e72a000',
+    input: '0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360'
+  }
+}
+      
+
+module.exports = withPreamble(`
+
+## The default block parameter
+
+The following methods have an optional extra \`defaultBlock\` parameter:
+
+- [eth_estimateGas](#eth_estimategas)
+- [eth_getBalance](#eth_getbalance)
+- [eth_getCode](#eth_getcode)
+- [eth_getTransactionCount](#eth_gettransactioncount)
+- [eth_getStorageAt](#eth_getstorageat)
+- [eth_call](#eth_call)
+
+When requests are made that act on the state of Ethereum, the last parameter determines the height of the block.
+
+The following options are possible for the \`defaultBlock\` parameter:
+
+- \`Quantity\`/\`Integer\` - an integer block number;
+- \`String "earliest"\` - for the earliest/genesis block;
+- \`String "latest"\` - for the latest mined block;
+- \`String "pending"\` - for the pending state/transactions.
+
+`, {
+    accounts: {
+      desc: 'Returns a list of addresses owned by client.',
+      params: [],
+      returns: {
+        type: Array,
+        desc: '20 Bytes - addresses owned by the client.',
+        example: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1']
+      }
+    },
+
+    blockNumber: {
+      desc: 'Returns the number of most recent block.',
+      params: [],
+      returns: {
+        type: Quantity,
+        desc: 'integer of the current block number the client is on.',
+        example: fromDecimal(1207)
+      }
+    },
+
+    call: {
+      desc: 'Executes a new message call immediately without creating a transaction on the block chain.',
+      params: [
+        {
+          type: CallRequest,
+          desc: 'The transaction call object.',
+          format: 'inputCallFormatter',
+          example: {
+            from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+            to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+            value: fromDecimal(100000)
+          }
+        },
+        {
+          type: BlockNumber,
+          desc: 'Integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
+          format: 'inputDefaultBlockNumberFormatter',
+          optional: true
+        }
+      ],
+      returns: {
+        type: Data,
+        desc: 'the return value of executed contract.',
+        example: '0x'
+      }
+    },
+
+    coinbase: {
+      desc: 'Returns the client coinbase address.',
+      params: [],
+      returns: {
+        type: Address,
+        desc: 'The current coinbase address.',
+        example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
+      }
+    },
+
+    estimateGas: {
+      desc: 'Makes a call or transaction, which won\'t be added to the blockchain and returns the used gas, which can be used for estimating the used gas.',
+      params: [
+        {
+          type: CallRequest,
+          desc: 'Same as [eth_call](#eth_call) parameters, except that all properties are optional.',
+          format: 'inputCallFormatter',
+          example: new Dummy('{ ... }')
+        },
+        {
+          type: BlockNumber,
+          desc: 'Integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
+          format: 'inputDefaultBlockNumberFormatter',
+          optional: true
+        }
+      ],
+      returns: {
+        type: Quantity,
+        desc: 'The amount of gas used.',
+        format: 'utils.toDecimal',
+        example: fromDecimal(21000)
+      }
+    },
+
+    gasPrice: {
+      desc: 'Returns the current price per gas in wei.',
+      params: [],
+      returns: {
+        type: Quantity,
+        desc: 'integer of the current gas price in wei.',
+        example: fromDecimal(10000000000000)
+      }
+    },
+
+    getBalance: {
+      desc: 'Returns the balance of the account of given address.',
+      params: [
+        {
+          type: Address,
+          desc: '20 Bytes - address to check for balance.',
+          format: 'inputAddressFormatter',
+          example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
+        },
+        {
+          type: BlockNumber,
+          desc: 'integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
+          format: 'inputDefaultBlockNumberFormatter',
+          optional: true
+        }
+      ],
+      returns: {
+        type: Quantity,
+        desc: 'integer of the current balance in wei.',
+        format: 'outputBigNumberFormatter',
+        example: '0x0234c8a3397aab58'
+      }
+    },
+
+    getBlockByHash: {
+      desc: 'Returns information about a block by hash.',
+      params: [
+        {
+          type: Hash,
+          desc: 'Hash of a block.',
+          example: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331'
+        },
+        {
+          type: Boolean,
+          desc: 'If `true` it returns the full transaction objects, if `false` only the hashes of the transactions.',
+          example: true
+        }
+      ],
+      returns: BLOCK
     },
 
     getBlockByNumber: {
@@ -315,7 +393,7 @@ The following options are possible for the \`defaultBlock\` parameter:
           example: true
         }
       ],
-      returns: 'See [eth_getBlockByHash](#eth_getblockbyhash)'
+      returns: BLOCK
     },
 
     getBlockTransactionCountByHash: {
@@ -401,18 +479,6 @@ The following options are possible for the \`defaultBlock\` parameter:
       }
     },
 
-    getFilterChangesEx: {
-      nodoc: 'Not present in Rust code', // https://github.com/ethereum/wiki/wiki/Proposal:-Reversion-Notification
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
-      }
-    },
-
     getFilterLogs: {
       desc: 'Returns an array of all logs matching filter with given id.',
       params: [
@@ -423,18 +489,6 @@ The following options are possible for the \`defaultBlock\` parameter:
         }
       ],
       returns: 'See [eth_getFilterChanges](#eth_getfilterchanges)'
-    },
-
-    getFilterLogsEx: {
-      nodoc: 'Not present in Rust code', // https://github.com/ethereum/wiki/wiki/Proposal:-Reversion-Notification
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
-      }
     },
 
     getLogs: {
@@ -449,18 +503,6 @@ The following options are possible for the \`defaultBlock\` parameter:
         }
       ],
       returns: 'See [eth_getFilterChanges](#eth_getfilterchanges)'
-    },
-
-    getLogsEx: {
-      nodoc: 'Not present in Rust code', // https://github.com/ethereum/wiki/wiki/Proposal:-Reversion-Notification
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
-      }
     },
 
     getStorageAt: {
@@ -501,103 +543,7 @@ The following options are possible for the \`defaultBlock\` parameter:
           example: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'
         }
       ],
-      returns: {
-        type: Object,
-        desc: 'A transaction object, or `null` when no transaction was found:',
-        format: 'outputTransactionFormatter',
-        details: {
-          hash: {
-            type: Hash,
-            desc: '32 Bytes - hash of the transaction.'
-          },
-          nonce: {
-            type: Quantity,
-            desc: 'the number of transactions made by the sender prior to this one.'
-          },
-          blockHash: {
-            type: Hash,
-            desc: '32 Bytes - hash of the block where this transaction was in. `null` when its pending.'
-          },
-          blockNumber: {
-            type: BlockNumber,
-            desc: 'block number where this transaction was in. `null` when its pending.'
-          },
-          transactionIndex: {
-            type: Quantity,
-            desc: 'integer of the transactions index position in the block. `null` when its pending.'
-          },
-          from: {
-            type: Address,
-            desc: '20 Bytes - address of the sender.'
-          },
-          to: {
-            type: Address,
-            desc: '20 Bytes - address of the receiver. `null` when its a contract creation transaction.'
-          },
-          value: {
-            type: Quantity,
-            desc: 'value transferred in Wei.'
-          },
-          gasPrice: {
-            type: Quantity,
-            desc: 'gas price provided by the sender in Wei.'
-          },
-          gas: {
-            type: Quantity,
-            desc: 'gas provided by the sender.'
-          },
-          input: {
-            type: Data,
-            desc: 'the data send along with the transaction.'
-          },
-          v: {
-            type: Quantity,
-            desc: 'the standardised V field of the signature.'
-          },
-          standard_v: {
-            type: Quantity,
-            desc: 'the standardised V field of the signature (0 or 1).'
-          },
-          r: {
-            type: Quantity,
-            desc: 'the R field of the signature.'
-          },
-          raw: {
-            type: Data,
-            desc: 'raw transaction data'
-          },
-          publicKey: {
-            type: Hash,
-            desc: 'public key of the signer.'
-          },
-          chainId: {
-            type: Quantity,
-            desc: 'the chain id of the transaction, if any.'
-          },
-          creates: {
-            type: Hash,
-            desc: 'creates contract hash'
-          },
-          condition: {
-            type: Object,
-            optional: true,
-            desc: 'conditional submission, Block number in `block` or timestamp in `time` or `null`. (parity-feature)'
-          }
-        },
-        example: {
-          hash: '0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b',
-          nonce: fromDecimal(0),
-          blockHash: '0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b',
-          blockNumber: fromDecimal(5599),
-          transactionIndex: fromDecimal(1),
-          from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-          to: '0x853f43d8a49eeb85d32cf465507dd71d507100c1',
-          value: fromDecimal(520464),
-          gas: fromDecimal(520464),
-          gasPrice: '0x09184e72a000',
-          input: '0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360'
-        }
-      }
+      returns: TRANSACTION
     },
 
     getTransactionByBlockHashAndIndex: {
@@ -614,7 +560,7 @@ The following options are possible for the \`defaultBlock\` parameter:
           example: fromDecimal(0)
         }
       ],
-      returns: 'See [eth_getBlockByHash](#eth_gettransactionbyhash)'
+      returns: TRANSACTION
     },
 
     getTransactionByBlockNumberAndIndex: {
@@ -631,7 +577,7 @@ The following options are possible for the \`defaultBlock\` parameter:
           example: fromDecimal(0)
         }
       ],
-      returns: 'See [eth_getBlockByHash](#eth_gettransactionbyhash)'
+      returns: BLOCK
     },
 
     getTransactionCount: {
@@ -756,7 +702,7 @@ The following options are possible for the \`defaultBlock\` parameter:
           example: fromDecimal(0)
         }
       ],
-      returns: 'See [eth_getBlockByHash](#eth_getblockbyhash)'
+      returns: BLOCK
     },
 
     getUncleByBlockNumberAndIndex: {
@@ -773,7 +719,7 @@ The following options are possible for the \`defaultBlock\` parameter:
           example: fromDecimal(0)
         }
       ],
-      returns: 'See [eth_getBlockByHash](#eth_getblockbyhash)'
+      returns: BLOCK
     },
 
     getUncleCountByBlockHash: {
@@ -830,18 +776,6 @@ The following options are possible for the \`defaultBlock\` parameter:
         type: Quantity,
         desc: 'number of hashes per second.',
         example: fromDecimal(906)
-      }
-    },
-
-    inspectTransaction: {
-      nodoc: 'Not present in Rust code',
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
       }
     },
 
@@ -926,18 +860,6 @@ The following options are possible for the \`defaultBlock\` parameter:
       }
     },
 
-    newFilterEx: {
-      nodoc: 'Not present in Rust code', // https://github.com/ethereum/wiki/wiki/Proposal:-Reversion-Notification
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
-      }
-    },
-
     newPendingTransactionFilter: {
       desc: 'Creates a filter in the node, to notify when new pending transactions arrive.\n\nTo check if the state has changed, call [eth_getFilterChanges](#eth_getfilterchanges).',
       params: [],
@@ -948,28 +870,6 @@ The following options are possible for the \`defaultBlock\` parameter:
       }
     },
 
-    notePassword: {
-      nodoc: 'Not present in Rust code',
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
-      }
-    },
-
-    pendingTransactions: {
-      nodoc: 'Not present in Rust code',
-      desc: '?',
-      params: [],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
-      }
-    },
-
     protocolVersion: {
       desc: 'Returns the current ethereum protocol version.',
       params: [],
@@ -977,18 +877,6 @@ The following options are possible for the \`defaultBlock\` parameter:
         type: String,
         desc: 'The current ethereum protocol version.',
         example: fromDecimal(99)
-      }
-    },
-
-    register: {
-      nodoc: 'Not present in Rust code',
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
       }
     },
 
@@ -1276,18 +1164,6 @@ The following options are possible for the \`defaultBlock\` parameter:
         type: Boolean,
         desc: '`true` if the filter was successfully uninstalled, otherwise `false`.',
         example: true
-      }
-    },
-
-    unregister: {
-      nodoc: 'Not present in Rust code',
-      desc: '?',
-      params: [
-        '?'
-      ],
-      returns: {
-        type: Boolean,
-        desc: 'whether the call was successful'
       }
     },
 
