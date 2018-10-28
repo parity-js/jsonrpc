@@ -30,7 +30,7 @@ module.exports = {
   net,
   personal,
   private,
-  shh,
+//  shh,
   signer,
   trace,
   web3
