@@ -1221,8 +1221,8 @@ connection, disconnecting causes all subscriptions to be canceled.
         {
           type: Object,
           desc: `
-  Subscription type-specific parameters. It must be left empty for
-  \`newHeads\` and must contain filter object for \`logs\`.
+Subscription type-specific parameters. It must be left empty for
+\`newHeads\` and must contain filter object for \`logs\`.
           `,
           example: {
             fromBlock: 'latest',
