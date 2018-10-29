@@ -1818,7 +1818,7 @@ module.exports = {
 	  params: [
 		{
 			  type: Boolean,
-			  desc: `flag to indicate if this signature was produced with the '\x19Ethereum Signed Message' prefix, usually signatures gotten from [`eth_signMessage`] are prefixed.`,
+			  desc: "flag to indicate if this signature was produced with the '\x19Ethereum Signed Message' prefix, usually signatures gotten from [`eth_signMessage`](JSONRPC-eth-module#eth_signMessage) are prefixed.",
 			  example: true,
 	  	},
 		{

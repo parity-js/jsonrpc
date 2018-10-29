@@ -71,18 +71,18 @@ class RecoveredAccount {}
 RecoveredAccount.print = '`Object`';
 
 RecoveredAccount.details = {
-	address: {
-		type: Address,
-		desc: 'The address recovered from the signature'
-	},
-	publicKey: {
-		type: Quantity,
-		desc: 'Public key recovered from the signature'
-	},
-	isValidForCurrentChain: {
-		type: Boolean,
-		desc: 'Flag that reports if this signture was produced for the current chain spec'
-	}
+  address: {
+    type: Address,
+    desc: 'The address recovered from the signature'
+  },
+  publicKey: {
+    type: Quantity,
+    desc: 'Public key recovered from the signature'
+  },
+  isValidForCurrentChain: {
+    type: Boolean,
+    desc: 'Flag that reports if this signture was produced for the current chain spec'
+  }
 }
 
 class TransactionRequest {}
