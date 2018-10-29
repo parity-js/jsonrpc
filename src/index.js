@@ -23,6 +23,7 @@ const shh = require('./interfaces/shh');
 const signer = require('./interfaces/signer');
 const trace = require('./interfaces/trace');
 const web3 = require('./interfaces/web3');
+const secretstore = require('./interfaces/secretstore');
 
 module.exports = {
   eth,
@@ -33,5 +34,6 @@ module.exports = {
 //  shh,
   signer,
   trace,
-  web3
+  web3,
+  secretstore
 };

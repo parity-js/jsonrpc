@@ -193,16 +193,16 @@ module.exports = {
   subscribePending: {
     pubsub: true,
     desc: `
-Starts a subscription for transactions in the confirmation queue.
-Each event contains all transactions currently in the queue.
+    Starts a subscription for transactions in the confirmation queue.
+    Each event contains all transactions currently in the queue.
 
-An example notification received by subscribing to this event:
-\`\`\`
-{"jsonrpc":"2.0","method":"signer_pending","params":{"subscription":"0x416d77337e24399d","result":[]}}
-\`\`\`
+    An example notification received by subscribing to this event:
+    \`\`\`
+    {"jsonrpc":"2.0","method":"signer_pending","params":{"subscription":"0x416d77337e24399d","result":[]}}
+    \`\`\`
 
-You can unsubscribe using \`signer_unsubscribePending\` RPC method. Subscriptions are also tied to a transport
-connection, disconnecting causes all subscriptions to be canceled.
+    You can unsubscribe using \`signer_unsubscribePending\` RPC method. Subscriptions are also tied to a transport
+    connection, disconnecting causes all subscriptions to be canceled.
     `,
     params: [],
     returns: {
