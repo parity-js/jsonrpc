@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-const { Address, Data, Hash, Quantity, BlockNumber, TransactionRequest, TransactionResponse } = require('../types');
+const { Address, Data, Hash, Quantity, BlockNumber, TransactionRequest, TransactionResponse, RecoveredAccount } = require('../types');
 const { fromDecimal, withComment, Dummy } = require('../helpers');
 
 const SECTION_ACCOUNTS = 'Accounts (read-only) and Signatures';
@@ -1811,6 +1811,43 @@ module.exports = {
       desc: 'The hostname and port number',
       example: 'localhost:8546'
     }
+  },
+
+  verifySignature: {
+	  desc: 'Recovers the public key and address that produced the given signature, as well as checks for chain replay protection against the current chain spec',
+	  params: [
+		{
+			  type: Boolean,
+			  desc: `flag to indicate if this signature was produced with the '\x19Ethereum Signed Message' prefix, usually signatures gotten from [`eth_signMessage`] are prefixed.`,
+			  example: true,
+	  	},
+		{
+			  type: Data,
+			  desc: 'Hashed message.',
+			  example: '0xbc36789e7a1e281436464229828f817d6612f7b477d66591ff96a9e064bcc98a'
+		},
+		{
+			  type: Quantity,
+			  desc: 'The R field of the signature.'
+		},
+		{
+			  type: Quantity,
+			  desc: 'The S field of the signature.'
+		},
+		{
+			  type: Quantity,
+			  desc: 'The V field of the signature.'
+		}
+	],
+	returns: {
+		type: RecoveredAccount,
+		desc: 'Information recovered from the signature',
+		example: {
+			address: "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
+			publicKey: "0x3fa8c08c65a83f6b4ea3e04e1cc70cbe3cd391499e3e05ab7dedf28aff9afc538200ff93e3f2b2cb5029f03c7ebee820d63a4c5a9541c83acebe293f54cacf0e",
+			isValidForCurrentChain: false
+		}
+	}
   },
 
   composeTransaction: {
