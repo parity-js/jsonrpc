@@ -31,19 +31,24 @@ Parity has separate RPC API set - secretstore, which:
       desc: 'This method can be used after running document key retrieval session or server and document key generation session. You can use it to encrypt small document:',
       params: [
       {
-        type: Array,
-          desc: `
-- 20 Bytes - address of account, which was used as requester in document [key retrieval session](Secret-Store#document-key-retrieval-session);
-- password for the passed account;
-- data returned by [document key retrieval session](Secret-Store#document-key-retrieval-session);
-- hex-encoded document data;
-          `,
-          example: [
-"0x00a329c0648769A73afAc7F9381E08FB43dBEA72",
-"",
-"0x049b05477a02b3197d568e1fa6fbfa4152316eea499d4f6c1c72f215246f87cf910bbd0951067466e8eb8d05437686ab6cf15caaffc9388a5b6c1cfc65eae556c949bae498a36c3bd630b47d852593f9ff9e0cac62e611afc0ae620ccf74b7e3925f2becb64a3afa7d74c33b8761d69af052dd8363d9dd28516ab80521399774737ec98d04bd118325fc242098e71fd9641430b7bde42f6845b86d61fa5fc6b77920c8eca923da955cd136cdc79467bba4",
-"0xdeadbeef"
-          ]
+        type: Address,
+        desc: "address of account, which was used as requester in document [key retrieval session](Secret-Store#document-key-retrieval-session);",
+        example: "0x00a329c0648769A73afAc7F9381E08FB43dBEA72"
+      },
+      {
+        type: String,
+        desc: "password for the passed account;",
+        example: "",
+      },
+      {
+        type: Data,
+        desc:"Data returned by [document key retrieval session](Secret-Store#document-key-retrieval-session);",
+        example:"0x049b05477a02b3197d568e1fa6fbfa4152316eea499d4f6c1c72f215246f87cf910bbd0951067466e8eb8d05437686ab6cf15caaffc9388a5b6c1cfc65eae556c949bae498a36c3bd630b47d852593f9ff9e0cac62e611afc0ae620ccf74b7e3925f2becb64a3afa7d74c33b8761d69af052dd8363d9dd28516ab80521399774737ec98d04bd118325fc242098e71fd9641430b7bde42f6845b86d61fa5fc6b77920c8eca923da955cd136cdc79467bba4"
+      },
+      {
+        type: Data,
+        desc: "hex-encoded document data;",
+        example: "0xdeadbeef"
       }],
       returns: {
         type: Data,

@@ -1887,7 +1887,7 @@ module.exports = {
       example: "['/dev/hidraw0']"
     }
   },
-    hardwarePinMatrixAck: {
+  hardwarePinMatrixAck: {
     desc: 'Send a pin to a hardware wallet at a specific path to unlock it',
     params: [
       {

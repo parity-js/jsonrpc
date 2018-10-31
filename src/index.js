@@ -31,6 +31,7 @@ module.exports = {
   net,
   personal,
   private,
+// TODO review all shh function in rust to match with JSON RPC functions
 //  shh,
   signer,
   trace,

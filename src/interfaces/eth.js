@@ -36,7 +36,7 @@ const BLOCK = {
           },
           nonce: {
             type: Data,
-            desc: '8 Bytes - hash of the generated proof-of-work. `null` when its pending block'
+            desc: '8 Bytes - hash of the generated proof-of-work. `null` when its pending block. Missing in case of PoA.'
           },
           sha3Uncles: {
             type: Data,
@@ -178,7 +178,7 @@ const TRANSACTION = {
       type: Quantity,
       desc: 'the standardised V field of the signature.'
     },
-    standard_v: {
+    standardV: {
       type: Quantity,
       desc: 'the standardised V field of the signature (0 or 1).'
     },
