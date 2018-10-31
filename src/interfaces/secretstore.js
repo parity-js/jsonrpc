@@ -60,19 +60,24 @@ Parity has separate RPC API set - secretstore, which:
       desc: 'This method can be used to decrypt document, encrypted by `secretstore_encrypt` method.',
       params: [
       {
-        type: Array,
-          desc: `
-- 20 Bytes - address of account, which was used as requester in document [key retrieval session](Secret-Store#document-key-retrieval-session);
-- password for the passed account;
-- data returned by [document key retrieval session](Secret-Store#document-key-retrieval-session);
-- the encrypted document data (result of \`secretstore_encrypt\` call);
-          `,
-          example: [
-"0x00a329c0648769A73afAc7F9381E08FB43dBEA72",
-"",
-"0x049b05477a02b3197d568e1fa6fbfa4152316eea499d4f6c1c72f215246f87cf910bbd0951067466e8eb8d05437686ab6cf15caaffc9388a5b6c1cfc65eae556c949bae498a36c3bd630b47d852593f9ff9e0cac62e611afc0ae620ccf74b7e3925f2becb64a3afa7d74c33b8761d69af052dd8363d9dd28516ab80521399774737ec98d04bd118325fc242098e71fd9641430b7bde42f6845b86d61fa5fc6b77920c8eca923da955cd136cdc79467bba4",
-"0xd164666d070be4d527285a40e84e8d17bf3e88fc"
-          ]
+        type: Address,
+        desc: "address of account, which was used as requester in document [key retrieval session](Secret-Store#document-key-retrieval-session);",
+        example: "0x00a329c0648769A73afAc7F9381E08FB43dBEA72"
+      },
+      {
+        type: String,
+        desc: "password for the passed account;",
+        example: "",
+      },
+      {
+        type: Data,
+        desc:"Data returned by [document key retrieval session](Secret-Store#document-key-retrieval-session);",
+        example:"0x049b05477a02b3197d568e1fa6fbfa4152316eea499d4f6c1c72f215246f87cf910bbd0951067466e8eb8d05437686ab6cf15caaffc9388a5b6c1cfc65eae556c949bae498a36c3bd630b47d852593f9ff9e0cac62e611afc0ae620ccf74b7e3925f2becb64a3afa7d74c33b8761d69af052dd8363d9dd28516ab80521399774737ec98d04bd118325fc242098e71fd9641430b7bde42f6845b86d61fa5fc6b77920c8eca923da955cd136cdc79467bba4"
+      },
+      {
+        type: Data,
+        desc: "the encrypted document data (result of \`secretstore_encrypt\` call);",
+        example: "0xd164666d070be4d527285a40e84e8d17bf3e88fc"
       }],
       returns: {
         type: Data,
@@ -132,18 +137,21 @@ Parity has separate RPC API set - secretstore, which:
     },
     generateDocumentKey: {
       desc: "This method is used to securely generate document key, so that it remains unknown to all key servers.",
-      params: [{
-        type: Array,
-        desc: `
-- 20 Bytes - he address to be used for signature generation (requester);
-- password for the passed account;
-- Server key generated using server [key generation session](Secret-Store#server-key-generation-session);
-      `,
-        example: [
-"0x00a329c0648769A73afAc7F9381E08FB43dBEA72",
-"",
-"0x2eabc29df5b62c75011bf1016237212b6305f8bae0f979b7b92250cfea06c20fe1689fc6d98964be64532598e3db7fc5712ad24b95e161f95bcfe1c6f859da3a"
-      ]
+      params: [
+      {
+        type: Address,
+        desc: "address of account, which was used as requester in document [key retrieval session](Secret-Store#document-key-retrieval-session);",
+        example: "0x00a329c0648769A73afAc7F9381E08FB43dBEA72"
+      },
+      {
+        type: String,
+        desc: "password for the passed account;",
+        example: "",
+      },
+      {
+        type: Data,
+        desc:"Data returned by [document key retrieval session](Secret-Store#document-key-retrieval-session);",
+        example:"0x049b05477a02b3197d568e1fa6fbfa4152316eea499d4f6c1c72f215246f87cf910bbd0951067466e8eb8d05437686ab6cf15caaffc9388a5b6c1cfc65eae556c949bae498a36c3bd630b47d852593f9ff9e0cac62e611afc0ae620ccf74b7e3925f2becb64a3afa7d74c33b8761d69af052dd8363d9dd28516ab80521399774737ec98d04bd118325fc242098e71fd9641430b7bde42f6845b86d61fa5fc6b77920c8eca923da955cd136cdc79467bba4"
       }],
       returns: {
         type: Object,
@@ -169,18 +177,21 @@ Parity has separate RPC API set - secretstore, which:
     },
     signRawHash:{
       desc:"This method is used to compute recoverrable ECDSA signatures, used in Secret Store: signatures of server key id and signatures of nodes set hash.\n **WARNING**: this method can be used to generate Ethereum-compatible signature of arbitrary hash, and should be enabled with caution.",
-      params: [{
-        type: Array,
-        desc: `
-- 20 bytes - the address to be used for signature generation (requester);
-- password for the passed account;
-- 256-bit hash to be signed (server key id or nodes set hash).
-        `,
-        example: [
-"0x00a329c0648769A73afAc7F9381E08FB43dBEA72",
-"",
-"0x0000000000000000000000000000000000000000000000000000000000000001"
-        ]
+      params: [
+      {
+        type: Address,
+        desc: "address of account, which was used as requester in document [key retrieval session](Secret-Store#document-key-retrieval-session);",
+        example: "0x00a329c0648769A73afAc7F9381E08FB43dBEA72"
+      },
+      {
+        type: String,
+        desc: "password for the passed account;",
+        example: "",
+      },
+      {
+        type: Hash,
+        desc: "256-bit hash to be signed (server key id or nodes set hash).",
+        example: "0x0000000000000000000000000000000000000000000000000000000000000001"
       }],
       returns: {
         type: Data,

@@ -603,6 +603,16 @@ The following options are possible for the \`defaultBlock\` parameter:
       }
     },
 
+    chainId: {
+      desc: 'Returns the EIP155 chain ID used for transaction signing at the current best block. Null is returned if not available.',
+      params: [],
+      returns: {
+        type: Quantity,
+        desc: 'EIP155 Chain ID, or `null` if not available.',
+        example: '0x1'
+      }
+    },
+
     getTransactionReceipt: {
       desc: 'Returns the receipt of a transaction by transaction hash.\n\n**Note** That the receipt is available even for pending transactions.',
       params: [

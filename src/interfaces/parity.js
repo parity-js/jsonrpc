@@ -56,17 +56,6 @@ module.exports = {
     }
   },
 
-  chainId: {
-    section: SECTION_NET,
-    desc: 'Returns the EIP155 chain ID used for transaction signing at the current best block. Null is returned if not available.',
-    params: [],
-    returns: {
-      type: Quantity,
-      desc: 'EIP155 Chain ID, or `null` if not available.',
-      example: '0x1'
-    }
-  },
-
   chainStatus: {
     section: SECTION_NET,
     desc: 'Returns the information on warp sync blocks',
