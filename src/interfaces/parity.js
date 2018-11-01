@@ -913,6 +913,85 @@ module.exports = {
     }
   },
 
+  call: {
+    decs: "perform multiple `eth_call` requests on top of each other, i.e. transaction n will be executed on top of a pending block with all n-1 transactions applied first. Allows to get a result of execution of dependent transactions.",
+    params: [
+      {
+        type: Array,
+        desc: "List of transaction's object to be called in sequence",
+        example: [{
+          from:"0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+          to:"0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
+          value:"0x186a0"
+        }, {
+          from:"0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+          to:"0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
+          value:"0x186a0"
+        }]
+      }
+    ],
+    returns: {
+      type: Array,
+      desc: "List of the return value of each call.",
+      example: ["0x","0x"]
+    }
+  },
+
+  allTransactionHashes: {
+    desc: "Request the list of transactions present in the transaction pool/ transaction queue",
+    params: [],
+    returns:{
+        type: Array,
+        desc: "List of transaction hash present in the node's transaction pool",
+        example: ["0x530683c1197f5b78a93d2ac07d41bd51913ddabd703b332b7024c0a8b45ab1ef","0x385ad71ae858c3b229c30d4ac690f86396f8fd48b32bdba966306a9c95ab52ad","0xdabc1f5156b2635f60c67d8cc27e9b07526f9239e9af821e80655766365dfa8d"]    
+    }
+  },
+
+  getBlockReceipts: {
+    desc: "Get receipts from all transactions from particular block, more efficient than fetching the receipts one-by-one",
+    params: [
+    {
+      type: BlockNumber,
+      example: "0x8D2B29"
+    }
+    ],
+    returns:{
+      desc: "The list of all the transaction's receipts of the given block",
+      type: Array,
+      example: 
+      [{
+        blockHash: "0x64d67cf84d95f8dfa1e1c3b5a5260aaf801ac99529b4ec3ae19bb06ba78c7bd5",
+        blockNumber: "0x8d2b29",
+        contractAddress: null,
+        cumulativeGasUsed: "0x5208",
+        from: "0x4d6bb4ed029b33cf25d0810b029bd8b1a6bcab7b",
+        gasUsed: "0x5208",
+        logs: [],
+        logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        root: null,
+        status: "0x1",
+        to: "0xe9c245293dac615c11a5bf26fcec91c3617645e4",
+        transactionHash: "0x1eba82fb5e8426b520c49a5d8dc6c24157e8f45fb9102aca4a99f5617c1539fc",
+        transactionIndex: "0x0"
+      },
+      {
+        blockHash: "0x64d67cf84d95f8dfa1e1c3b5a5260aaf801ac99529b4ec3ae19bb06ba78c7bd5",
+        blockNumber: "0x8d2b29",
+        contractAddress: null,
+        cumulativeGasUsed: "0x3fc28",
+        from: "0x0caf0d921b2bd24ca04e1f06344e976af223783b",
+        gasUsed: "0x3aa20",
+        logs: [],
+        logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        root: null,
+        status: "0x1",
+        to: "0xf2bb17cb59746cae43d65eec233925b6584cddef",
+        transactionHash: "0x70a50d28db69e5c7a8686141f282530d52e7e3c625296dc53eb5684afa727886",
+        transactionIndex: "0x1"
+      }]
+    }
+  },
+  
   encryptMessage: {
     desc: 'Encrypt some data with a public key under ECIES.',
     params: [
