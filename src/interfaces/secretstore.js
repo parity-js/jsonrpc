@@ -89,26 +89,34 @@ Parity has separate RPC API set - secretstore, which:
       desc: "This method can be used to decrypt document, encrypted by `[secretstore_encrypt](#secretstore_encrypt)` method before.",
       params: [
       {
+        type: Address,
+        desc: "address of account, which was used as requester in document [key retrieval session](Secret-Store#document-key-retrieval-session);",
+        example: "0xfeacd0d28fd158ba2d3adb6d69d20c723214edc9"
+      },
+      {
+        type: String,
+        desc: "password for the passed account;",
+        example: "bobpwd",
+      },
+      {
+        type: Data,
+        desc: "the value of `decrypted_secret` field from [document key shadow retrieval](Secret-Store#document-key-shadow-retrieval-session) session result;",
+        example: "0x9b5aa977f537d24c5f523f67a95329bdd147e6be1b0d913c1506d2a0a210ab24ce380787d9b81f88fd05dfcfc083c8df56569a763440a1159a41db144a0d3d6b"
+      },
+      {
+        type: Data,
+        desc: "the value of `common_point` field from [document key shadow retrieval](Secret-Store#document-key-shadow-retrieval-session) session result;",
+        example: "0xf0e62b05b68b1847ad948572a1b04a91dee7d7dca2f675fd00c136eb706d4916fb1fcdd446ab9df236eba3ab8d6184b7b3f4e8584259b5e2dc6dff8bcb07c632"
+      },
+      {
         type: Array,
-        desc: `
-- 20 Bytes - address of account, which was used as requester in document [key retrieval session](Secret-Store#document-key-retrieval-session);
-- password for the passed account;
-- the value of \`decrypted_secret\` field from [document key shadow retrieval](Secret-Store#document-key-shadow-retrieval-session) session result;
-- the value of \`common_point\` field from [document key shadow retrieval](Secret-Store#document-key-shadow-retrieval-session) session result;
-- the value of \`decrypt_shadows\` field from [document key shadow retrieval](Secret-Store#document-key-shadow-retrieval-session) session result;
-- the encrypted document data (result of \`secretstore_encrypt\` call);
-        `,
-        example: `[
-"0xfeacd0d28fd158ba2d3adb6d69d20c723214edc9",
-"bobpwd",
-"0x9b5aa977f537d24c5f523f67a95329bdd147e6be1b0d913c1506d2a0a210ab24ce380787d9b81f88fd05dfcfc083c8df56569a763440a1159a41db144a0d3d6b",
-"0xf0e62b05b68b1847ad948572a1b04a91dee7d7dca2f675fd00c136eb706d4916fb1fcdd446ab9df236eba3ab8d6184b7b3f4e8584259b5e2dc6dff8bcb07c632",
-[
-  "0x0478055ba0c544032560c4db1fbe02cd848217a9d9e476dc3a4f7f2c6dbe9535f64b947d813a42e77a3d21ccbd46a50f10c6a556daa897ed4e80d9938f696b2efde9558da7a1e0c2290fc97d0594a134a2a2fc316250808fb43e42bcfb3586e74a97dde2c6403f25b0952e15e7b2a4d11dab01f1d77d0e39fc98a83bf2971e190bed38108dfe9f6be7c29f9fe1c868df7c",
-  "0x04733d896fc8279b3c8209e10dd12f7c052ac9d8f171dff174e2183f68720294b162e879166ae744883c74cbe56528c2908a4d17c6f245d9158491351cc1f11ecf79f8e9b828963e07c839eaf923c2db29d2c85d282326f83e9ccac334e3abf3e99b7e41811940426f97995494e2bae53f0ddd38ccd6dba26847723a77629f703c564c14da4880521e192976e09e7499a4"
-],
-"0x237ac394e3f6cbe7395fc7076a3b58036a0e185a519e41b35a87ba73679cc1bb"
-        ]`
+        desc: "the value of `decrypt_shadows` field from [document key shadow retrieval](Secret-Store#document-key-shadow-retrieval-session) session result;",
+        example: ["0x0478055ba0c544032560c4db1fbe02cd848217a9d9e476dc3a4f7f2c6dbe9535f64b947d813a42e77a3d21ccbd46a50f10c6a556daa897ed4e80d9938f696b2efde9558da7a1e0c2290fc97d0594a134a2a2fc316250808fb43e42bcfb3586e74a97dde2c6403f25b0952e15e7b2a4d11dab01f1d77d0e39fc98a83bf2971e190bed38108dfe9f6be7c29f9fe1c868df7c","0x04733d896fc8279b3c8209e10dd12f7c052ac9d8f171dff174e2183f68720294b162e879166ae744883c74cbe56528c2908a4d17c6f245d9158491351cc1f11ecf79f8e9b828963e07c839eaf923c2db29d2c85d282326f83e9ccac334e3abf3e99b7e41811940426f97995494e2bae53f0ddd38ccd6dba26847723a77629f703c564c14da4880521e192976e09e7499a4"]
+      },
+      {
+        type: Data,
+        desc: "the encrypted document data (result of `secretstore_encrypt` call);",
+        example: "0x237ac394e3f6cbe7395fc7076a3b58036a0e185a519e41b35a87ba73679cc1bb"
       }],
       returns: {
         type: Data,
@@ -122,10 +130,7 @@ Parity has separate RPC API set - secretstore, which:
         {
           type: Array,
           desc: "Set of node id",
-          example: [
-"0x843645726384530ffb0c52f175278143b5a93959af7864460f5a4fec9afd1450cfb8aef63dec90657f43f55b13e0a73c7524d4e9a13c051b4e5f1e53f39ecd91",
-"0x07230e34ebfe41337d3ed53b186b3861751f2401ee74b988bba55694e2a6f60c757677e194be2e53c3523cc8548694e636e6acb35c4e8fdc5e29d28679b9b2f3"
-        ]
+          example: ["0x843645726384530ffb0c52f175278143b5a93959af7864460f5a4fec9afd1450cfb8aef63dec90657f43f55b13e0a73c7524d4e9a13c051b4e5f1e53f39ecd91","0x07230e34ebfe41337d3ed53b186b3861751f2401ee74b988bba55694e2a6f60c757677e194be2e53c3523cc8548694e636e6acb35c4e8fdc5e29d28679b9b2f3"]
         }
       ],
       returns:

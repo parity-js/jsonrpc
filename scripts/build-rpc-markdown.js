@@ -193,7 +193,7 @@ function buildExample (name, method) {
 
   const hasReqExample = method.params.every(hasExample);
   const hasResExample = hasExample(method.returns);
-  const isPubSubApi = method.pubsub !== undefined && method.pubsub;
+  const isPubSubApi = !!method.pubsub;
 
   if (!hasReqExample && !hasResExample) {
     error(`${name} has no examples${logPostfix}`);
