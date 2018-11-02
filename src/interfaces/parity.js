@@ -952,6 +952,7 @@ module.exports = {
     params: [
     {
       type: BlockNumber,
+      desc: 'integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`, as in the default block parameter.',
       example: "0x8D2B29"
     }
     ],
@@ -1014,7 +1015,7 @@ module.exports = {
   },
 
   futureTransactions: {
-    desc: '**This method is deprecated in favor of [parity_allTransactions](#parity_allTransactions)** \n\n Returns all future transactions from transaction queue.',
+    desc: '**This method is deprecated in favor of [parity_allTransactions](#parity_allTransactions)**\n\nReturns all future transactions from transaction queue.',
     params: [],
     returns: {
       type: Array,
@@ -1983,6 +1984,33 @@ module.exports = {
       }
     }
   },
+
+  submitWorkDetail: {
+    desc: 'Used for submitting a proof-of-work solution. Similar to `eth_submitWork` but will return the block hash on success, and return an explicit error message on failure.',
+    params: [
+      {
+        type: Data,
+        desc: '8 Bytes - The nonce found (64 bits).',
+        example: '0x0000000000000001'
+      },
+      {
+        type: Data,
+        desc: '32 Bytes - The header\'s pow-hash (256 bits)',
+        example: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+      },
+      {
+        type: Data,
+        desc: '32 Bytes - The mix digest (256 bits).',
+        example: '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000'
+      }
+    ],
+    returns: {
+      type: Hash,
+      desc: 'Hash of the submitted block if successful',
+      example: "0x07a992176ab51ee50539c1ba287bef937fe49c9a96dafa03954fb6fefa594691"
+    }
+  },
+
   lockedHardwareAccountsInfo: {
     desc: 'Provides a list of paths to locked hardware wallets',
     params: [],
@@ -1992,6 +2020,7 @@ module.exports = {
       example: "['/dev/hidraw0']"
     }
   },
+
   hardwarePinMatrixAck: {
     desc: 'Send a pin to a hardware wallet at a specific path to unlock it',
     params: [
@@ -2046,7 +2075,7 @@ An example notification received by subscribing to \`eth_getBalance\` RPC method
 
 You can unsubscribe using \`parity_unsubscribe\` RPC method. Subscriptions are also tied to a transport
 connection, disconnecting causes all subscriptions to be canceled.
-    `,
+`,
     params: [
       {
         type: String,

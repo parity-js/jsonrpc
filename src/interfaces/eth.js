@@ -1221,7 +1221,7 @@ An example notification received by subscribing to \`newHeads\` event:
 
 You can unsubscribe using \`eth_unsubscribe\` RPC method. Subscriptions are also tied to a transport
 connection, disconnecting causes all subscriptions to be canceled.
-      `,
+`,
       params: [
         {
           type: String,
@@ -1233,7 +1233,7 @@ connection, disconnecting causes all subscriptions to be canceled.
           desc: `
 Subscription type-specific parameters. It must be left empty for
 \`newHeads\` and must contain filter object for \`logs\`.
-          `,
+`,
           example: {
             fromBlock: 'latest',
             toBlock: 'latest'

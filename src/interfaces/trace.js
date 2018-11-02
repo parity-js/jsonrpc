@@ -348,6 +348,64 @@ then it should look something like:
       }
     },
 
+    callMany: {
+      section: SECTION_ADHOC,
+      desc: 'Performs multiple call traces on top of the same block. i.e. transaction `n` will be executed on top of a pending block with all `n-1` transactions applied (traced) first. Allows to trace dependent transactions.',
+      params: [
+        {
+          type: Array,
+          desc: "",
+          example: ""
+        }
+      ],
+      returns: {
+        type: Array,
+        desc: "",
+        example: ""
+      }
+    },
+
+    replayBlockTransactions: {
+      section: SECTION_ADHOC,
+      desc: 'Replays all transactions in a block returning the requested traces for each transaction.',
+      params: [
+        {
+          type: BlockNumber,
+          desc: 'Integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`.',
+          example: "0x2ed119"
+        },
+        {
+          type: Array,
+          desc: 'Type of trace, one or more of: `"vmTrace"`, `"trace"`, `"stateDiff"`.',
+          example: ['trace']
+        } 
+      ],
+      returns:
+      {
+        type: Array,
+        desc: "Block transactions traces.",
+        example: 
+        [
+          {
+            "output": "0x",
+            "stateDiff": null,
+            "trace": [{
+              "action": new Dummy('{ ... }'),
+              "result": {
+                "gasUsed": "0x0",
+                "output": "0x"
+              },
+              "subtraces": 0,
+              "traceAddress": [],
+              "type": "call"
+            }],
+            "vmTrace": null
+          },
+          new Dummy('{ ... }')
+      ]
+      }
+    },
+
     replayTransaction: {
       section: SECTION_ADHOC,
       desc: 'Replays a transaction, returning the traces.',
