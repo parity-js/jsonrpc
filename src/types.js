@@ -35,14 +35,14 @@ class EIP191 {}
 class PresignedTransaction {}
 
 PresignedTransaction.details = {
-	applicationData: {
-		type: Data,
-		desc: 'Presigned Transaction data',
-	},
-	validator: {
-		type: Address,
-		desc: 'address of the contract that validates the presigned transaction'
-	}
+  data: {
+    type: Data,
+    desc: 'Presigned Transaction data'
+  },
+  validator: {
+    type: Address,
+    desc: 'address of the contract that validates the presigned transaction'
+  }
 }
 
 EIP191.print = '`EIP712` or `Data` or `PresignedTransaction`'
