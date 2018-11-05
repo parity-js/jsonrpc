@@ -83,7 +83,7 @@ RecoveredAccount.details = {
     type: Boolean,
     desc: 'Flag that reports if this signture was produced for the current chain spec'
   }
-}
+};
 
 class TransactionRequest {}
 

@@ -376,26 +376,6 @@ module.exports = {
       }
     }
   },
-  hardwarePinMatrixAck: {
-    desc: 'Send a pin to a hardware wallet at a specific path to unlock it',
-    params: [
-      {
-        type: String,
-        desc: 'path to the device',
-        example: 'USB_2b24_0001_14100000'
-      },
-      {
-        type: String,
-        desc: 'the pin as recieved from the pin matrix',
-        example: '1234'
-      }
-    ],
-    returns: {
-      type: Boolean,
-      desc: 'Whether or not the pin entry successfully unlocked the device',
-      example: true
-    }
-  },
   minGasPrice: {
     section: SECTION_MINING,
     desc: 'Returns currently set minimal gas price',
@@ -914,85 +894,85 @@ module.exports = {
   },
 
   call: {
-    decs: "perform multiple `eth_call` requests on top of each other, i.e. transaction n will be executed on top of a pending block with all n-1 transactions applied first. Allows to get a result of execution of dependent transactions.",
+    decs: 'perform multiple `eth_call` requests on top of each other, i.e. transaction n will be executed on top of a pending block with all n-1 transactions applied first. Allows to get a result of execution of dependent transactions.',
     params: [
       {
         type: Array,
         desc: "List of transaction's object to be called in sequence",
         example: [{
-          from:"0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-          to:"0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
-          value:"0x186a0"
+          from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+          to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+          value: '0x186a0'
         }, {
-          from:"0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-          to:"0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
-          value:"0x186a0"
+          from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+          to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+          value: '0x186a0'
         }]
       }
     ],
     returns: {
       type: Array,
-      desc: "List of the return value of each call.",
-      example: ["0x","0x"]
+      desc: 'List of the return value of each call.',
+      example: ['0x', '0x']
     }
   },
 
   allTransactionHashes: {
-    desc: "Request the list of transactions present in the transaction pool/ transaction queue",
+    desc: 'Request the list of transactions present in the transaction pool/ transaction queue',
     params: [],
-    returns:{
-        type: Array,
-        desc: "List of transaction hash present in the node's transaction pool",
-        example: ["0x530683c1197f5b78a93d2ac07d41bd51913ddabd703b332b7024c0a8b45ab1ef","0x385ad71ae858c3b229c30d4ac690f86396f8fd48b32bdba966306a9c95ab52ad","0xdabc1f5156b2635f60c67d8cc27e9b07526f9239e9af821e80655766365dfa8d"]    
+    returns: {
+      type: Array,
+      desc: "List of transaction hash present in the node's transaction pool",
+      example: ['0x530683c1197f5b78a93d2ac07d41bd51913ddabd703b332b7024c0a8b45ab1ef', '0x385ad71ae858c3b229c30d4ac690f86396f8fd48b32bdba966306a9c95ab52ad', '0xdabc1f5156b2635f60c67d8cc27e9b07526f9239e9af821e80655766365dfa8d']
     }
   },
 
   getBlockReceipts: {
-    desc: "Get receipts from all transactions from particular block, more efficient than fetching the receipts one-by-one",
+    desc: 'Get receipts from all transactions from particular block, more efficient than fetching the receipts one-by-one',
     params: [
-    {
-      type: BlockNumber,
-      desc: 'integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`, as in the default block parameter.',
-      example: "0x8D2B29"
-    }
+      {
+        type: BlockNumber,
+        desc: 'integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`, as in the default block parameter.',
+        example: '0x8D2B29'
+      }
     ],
-    returns:{
+    returns: {
       desc: "The list of all the transaction's receipts of the given block",
       type: Array,
-      example: 
+      example:
       [{
-        blockHash: "0x64d67cf84d95f8dfa1e1c3b5a5260aaf801ac99529b4ec3ae19bb06ba78c7bd5",
-        blockNumber: "0x8d2b29",
+        blockHash: '0x64d67cf84d95f8dfa1e1c3b5a5260aaf801ac99529b4ec3ae19bb06ba78c7bd5',
+        blockNumber: '0x8d2b29',
         contractAddress: null,
-        cumulativeGasUsed: "0x5208",
-        from: "0x4d6bb4ed029b33cf25d0810b029bd8b1a6bcab7b",
-        gasUsed: "0x5208",
+        cumulativeGasUsed: '0x5208',
+        from: '0x4d6bb4ed029b33cf25d0810b029bd8b1a6bcab7b',
+        gasUsed: '0x5208',
         logs: [],
-        logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
         root: null,
-        status: "0x1",
-        to: "0xe9c245293dac615c11a5bf26fcec91c3617645e4",
-        transactionHash: "0x1eba82fb5e8426b520c49a5d8dc6c24157e8f45fb9102aca4a99f5617c1539fc",
-        transactionIndex: "0x0"
+        status: '0x1',
+        to: '0xe9c245293dac615c11a5bf26fcec91c3617645e4',
+        transactionHash: '0x1eba82fb5e8426b520c49a5d8dc6c24157e8f45fb9102aca4a99f5617c1539fc',
+        transactionIndex: '0x0'
       },
       {
-        blockHash: "0x64d67cf84d95f8dfa1e1c3b5a5260aaf801ac99529b4ec3ae19bb06ba78c7bd5",
-        blockNumber: "0x8d2b29",
+        blockHash: '0x64d67cf84d95f8dfa1e1c3b5a5260aaf801ac99529b4ec3ae19bb06ba78c7bd5',
+        blockNumber: '0x8d2b29',
         contractAddress: null,
-        cumulativeGasUsed: "0x3fc28",
-        from: "0x0caf0d921b2bd24ca04e1f06344e976af223783b",
-        gasUsed: "0x3aa20",
+        cumulativeGasUsed: '0x3fc28',
+        from: '0x0caf0d921b2bd24ca04e1f06344e976af223783b',
+        gasUsed: '0x3aa20',
         logs: [],
-        logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
         root: null,
-        status: "0x1",
-        to: "0xf2bb17cb59746cae43d65eec233925b6584cddef",
-        transactionHash: "0x70a50d28db69e5c7a8686141f282530d52e7e3c625296dc53eb5684afa727886",
-        transactionIndex: "0x1"
+        status: '0x1',
+        to: '0xf2bb17cb59746cae43d65eec233925b6584cddef',
+        transactionHash: '0x70a50d28db69e5c7a8686141f282530d52e7e3c625296dc53eb5684afa727886',
+        transactionIndex: '0x1'
       }]
     }
   },
-  
+
   encryptMessage: {
     desc: 'Encrypt some data with a public key under ECIES.',
     params: [
@@ -1059,26 +1039,26 @@ module.exports = {
       details: TransactionResponse.details,
       example: [
         {
-        "blockHash": null,
-        "blockNumber": null,
-        "chainId": null,
-        "condition": null,
-        "creates": null,
-        "from": "0x5f3dffcf347944d3739b0805c934d86c8621997f",
-        "gas": "0x493e0",
-        "gasPrice": "0x12a05f200",
-        "hash": "0x045301a128ffcb4662dd199d1176bdf4cc9f0628e10d6bf120edfb52e3e39a78",
-        "input": "0x13f56f730...f3b4dc000",
-        "nonce": "0x577",
-        "publicKey": "0x3bb...9ce1b1",
-        "r": "0x6fd2c7a5dbb8795038ca258196083b3eabe15a20e3020c3f45e88f2e447be410",
-        "raw": "0xf88b8247d202...83eef3f8916bb818ce7",
-        "s": "0x5993992c547d20234aabfc8c32a58d25784255fef500383eef3f8916bb818ce7",
-        "standardV": "0x0",
-        "to": "0xe8b2d01ffa0a15736b2370b6e5064f9702c891b6",
-        "transactionIndex": null,
-        "v": "0x1b",
-        "value": "0x0"
+          'blockHash': null,
+          'blockNumber': null,
+          'chainId': null,
+          'condition': null,
+          'creates': null,
+          'from': '0x5f3dffcf347944d3739b0805c934d86c8621997f',
+          'gas': '0x493e0',
+          'gasPrice': '0x12a05f200',
+          'hash': '0x045301a128ffcb4662dd199d1176bdf4cc9f0628e10d6bf120edfb52e3e39a78',
+          'input': '0x13f56f730...f3b4dc000',
+          'nonce': '0x577',
+          'publicKey': '0x3bb...9ce1b1',
+          'r': '0x6fd2c7a5dbb8795038ca258196083b3eabe15a20e3020c3f45e88f2e447be410',
+          'raw': '0xf88b8247d202...83eef3f8916bb818ce7',
+          's': '0x5993992c547d20234aabfc8c32a58d25784255fef500383eef3f8916bb818ce7',
+          'standardV': '0x0',
+          'to': '0xe8b2d01ffa0a15736b2370b6e5064f9702c891b6',
+          'transactionIndex': null,
+          'v': '0x1b',
+          'value': '0x0'
         },
         new Dummy('{ ... }, { ... }, ...')
       ]
@@ -1883,40 +1863,40 @@ module.exports = {
   },
 
   verifySignature: {
-	  desc: 'Recovers the public key and address that produced the given signature, as well as checks for chain replay protection against the current chain spec',
-	  params: [
-		{
-			  type: Boolean,
-			  desc: "flag to indicate if this signature was produced with the '\x19Ethereum Signed Message' prefix, usually signatures gotten from [`eth_signMessage`](JSONRPC-eth-module#eth_signMessage) are prefixed.",
-			  example: true,
-	  	},
-		{
-			  type: Data,
-			  desc: 'Hashed message.',
-			  example: '0xbc36789e7a1e281436464229828f817d6612f7b477d66591ff96a9e064bcc98a'
-		},
-		{
-			  type: Quantity,
-			  desc: 'The R field of the signature.'
-		},
-		{
-			  type: Quantity,
-			  desc: 'The S field of the signature.'
-		},
-		{
-			  type: Quantity,
-			  desc: 'The V field of the signature.'
-		}
-	],
-	returns: {
-		type: RecoveredAccount,
-		desc: 'Information recovered from the signature',
-		example: {
-			address: "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
-			publicKey: "0x3fa8c08c65a83f6b4ea3e04e1cc70cbe3cd391499e3e05ab7dedf28aff9afc538200ff93e3f2b2cb5029f03c7ebee820d63a4c5a9541c83acebe293f54cacf0e",
-			isValidForCurrentChain: false
-		}
-	}
+    desc: 'Recovers the public key and address that produced the given signature, as well as checks for chain replay protection against the current chain spec',
+    params: [
+      {
+        type: Boolean,
+        desc: "flag to indicate if this signature was produced with the '\x19Ethereum Signed Message' prefix, usually signatures gotten from [`eth_signMessage`](JSONRPC-eth-module#eth_signMessage) are prefixed.",
+        example: true
+      },
+      {
+        type: Data,
+        desc: 'Hashed message.',
+        example: '0xbc36789e7a1e281436464229828f817d6612f7b477d66591ff96a9e064bcc98a'
+      },
+      {
+        type: Quantity,
+        desc: 'The R field of the signature.'
+      },
+      {
+        type: Quantity,
+        desc: 'The S field of the signature.'
+      },
+      {
+        type: Quantity,
+        desc: 'The V field of the signature.'
+      }
+    ],
+    returns: {
+      type: RecoveredAccount,
+      desc: 'Information recovered from the signature',
+      example: {
+        address: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
+        publicKey: '0x3fa8c08c65a83f6b4ea3e04e1cc70cbe3cd391499e3e05ab7dedf28aff9afc538200ff93e3f2b2cb5029f03c7ebee820d63a4c5a9541c83acebe293f54cacf0e',
+        isValidForCurrentChain: false
+      }
+    }
   },
 
   composeTransaction: {
@@ -2007,7 +1987,17 @@ module.exports = {
     returns: {
       type: Hash,
       desc: 'Hash of the submitted block if successful',
-      example: "0x07a992176ab51ee50539c1ba287bef937fe49c9a96dafa03954fb6fefa594691"
+      example: '0x07a992176ab51ee50539c1ba287bef937fe49c9a96dafa03954fb6fefa594691'
+    }
+  },
+
+  nodeStatus: {
+    desc: 'Determines the health of the node. Returns an error in case the node is not connected to any peers (except for dev chain) or is still syncing.',
+    params: [],
+    returns: {
+      type: null,
+      desc: 'A successful response is with no content is generated in case the node is operating correctly',
+      example: null
     }
   },
 
@@ -2041,6 +2031,7 @@ module.exports = {
       example: true
     }
   },
+
   cidV0: {
     desc: 'Compute a v0 IPFS Content ID from protobuf encoded bytes.',
     params: [

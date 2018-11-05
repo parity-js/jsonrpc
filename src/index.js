@@ -32,8 +32,8 @@ module.exports = {
   personal,
   private: privateMod,
   secretstore,
-// TODO review all shh function in rust to match with JSON RPC functions
-//  shh,
+  // TODO review all shh function in rust to match with JSON RPC functions
+  //  shh,
   signer,
   trace,
   web3
