@@ -19,7 +19,8 @@ const net = require('./interfaces/net');
 const parity = require('./interfaces/parity');
 const personal = require('./interfaces/personal');
 const privateMod = require('./interfaces/private');
-const shh = require('./interfaces/shh');
+// TODO review all shh function in rust to match with JSON RPC functions
+// const shh = require('./interfaces/shh');
 const signer = require('./interfaces/signer');
 const trace = require('./interfaces/trace');
 const web3 = require('./interfaces/web3');

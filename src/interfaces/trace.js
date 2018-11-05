@@ -354,14 +354,86 @@ then it should look something like:
       params: [
         {
           type: Array,
-          desc: '',
-          example: ''
+          desc: 'List of trace calls with the type of trace, one or more of: `"vmTrace"`, `"trace"`, `"stateDiff"`.',
+          example:
+          [
+            [
+              {
+                'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+                'to': '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+                'value': '0x186a0'
+              },
+              ['trace']
+            ], [
+              {
+                'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+                'to': '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+                'value': '0x186a0'
+              },
+              ['trace']
+            ]
+          ]
+        }, {
+          type: BlockNumber,
+          desc: 'integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
+          format: 'inputDefaultBlockNumberFormatter',
+          example: 'latest',
+          optional: true
         }
       ],
       returns: {
         type: Array,
-        desc: '',
-        example: ''
+        desc: 'Array of the given transactions\' traces',
+        example: [
+          {
+            'output': '0x',
+            'stateDiff': null,
+            'trace': [
+              {
+                'action': {
+                  'callType': 'call',
+                  'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+                  'gas': '0x1dcd12f8',
+                  'input': '0x',
+                  'to': '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+                  'value': '0x186a0'
+                },
+                'result': {
+                  'gasUsed': '0x0',
+                  'output': '0x'
+                },
+                'subtraces': 0,
+                'traceAddress': [],
+                'type': 'call'
+              }
+            ],
+            'vmTrace': null
+          },
+          {
+            'output': '0x',
+            'stateDiff': null,
+            'trace': [
+              {
+                'action': {
+                  'callType': 'call',
+                  'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+                  'gas': '0x1dcd12f8',
+                  'input': '0x',
+                  'to': '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+                  'value': '0x186a0'
+                },
+                'result': {
+                  'gasUsed': '0x0',
+                  'output': '0x'
+                },
+                'subtraces': 0,
+                'traceAddress': [],
+                'type': 'call'
+              }
+            ],
+            'vmTrace': null
+          }
+        ]
       }
     },
 
