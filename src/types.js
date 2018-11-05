@@ -28,11 +28,94 @@ class Quantity {}
 
 class BlockNumber {}
 
-BlockNumber.print = '`Quantity` or `Tag`';
+class EIP712 {}
+
+class EIP191 {}
+
+class PresignedTransaction {}
+
+PresignedTransaction.details = {
+	applicationData: {
+		type: Data,
+		desc: 'Presigned Transaction data',
+	},
+	validator: {
+		type: Address,
+		desc: 'address of the contract that validates the presigned transaction'
+	}
+}
+
+EIP191.print = '`EIP712` or `Data` or `PresignedTransaction`'
+
+BlockNumber.print = '`Quantity` or `Tag`'
 
 class CallRequest {}
 
-CallRequest.print = '`Object`';
+CallRequest.print = '`Object`'
+
+EIP712Domain.print = {
+  name: {
+    type: String,
+    desc: 'User readable name of signing domain, i.e. the name of the DApp or the protocol',
+    example: 'Ether Mail'
+  },
+  verifyingContract: {
+    type: Address,
+    desc: 'Address of the contract that verifies the signed message'
+  },
+  chainId: {
+    type: Integer,
+    desc: 'chain id this signature is valid for to prevent chain replay attacks'
+  },
+  version: {
+    type: Integer,
+    desc: 'The current major version of the signing domain. Signatures from different versions are not compatible.'
+  },
+  salt: {
+    type: Data,
+    desc: '(Optional) should be used as a last resort domain seperator'
+  }
+}
+
+EIP712.print = {
+  primaryType: {
+    type: String,
+    desc: 'name of the struct defined in `types` that is the same type as `message`'
+  },
+  domain: {
+    type: EIP712Domain,
+    desc: 'EIP712Domain'
+  },
+  message: {
+    type: Object,
+    desc: 'Structured message to be signed',
+    example: {
+      from: {
+        name: 'Cow',
+        wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826'
+      },
+      to: {
+        name: 'Bob',
+        wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB'
+      },
+      contents: 'Hello, Bob!'
+    }
+  },
+  types: {
+    type: Object,
+    desc: "type definitions for the EIP712Domain and the primaryType as well as it's dependent types",
+    example: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' }
+      ],
+      Person: [{ name: 'name', type: 'string' }, { name: 'wallet', type: 'address' }],
+      Mail: [{ name: 'from', type: 'Person' }, { name: 'to', type: 'Person' }, { name: 'contents', type: 'string' }]
+    }
+  }
+}
 
 CallRequest.details = {
   from: {
@@ -46,7 +129,8 @@ CallRequest.details = {
   },
   gas: {
     type: Quantity,
-    desc: 'Integer of the gas provided for the transaction execution. eth_call consumes zero gas, but this parameter may be needed by some executions.',
+    desc:
+      'Integer of the gas provided for the transaction execution. eth_call consumes zero gas, but this parameter may be needed by some executions.',
     optional: true
   },
   gasPrice: {
@@ -61,14 +145,15 @@ CallRequest.details = {
   },
   data: {
     type: Data,
-    desc: '4 byte hash of the method signature followed by encoded parameters. For details see [Ethereum Contract ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI).',
+    desc:
+      '4 byte hash of the method signature followed by encoded parameters. For details see [Ethereum Contract ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI).',
     optional: true
   }
-};
+}
 
 class RecoveredAccount {}
 
-RecoveredAccount.print = '`Object`';
+RecoveredAccount.print = '`Object`'
 
 RecoveredAccount.details = {
   address: {
@@ -83,11 +168,11 @@ RecoveredAccount.details = {
     type: Boolean,
     desc: 'Flag that reports if this signture was produced for the current chain spec'
   }
-};
+}
 
 class TransactionRequest {}
 
-TransactionRequest.print = '`Object`';
+TransactionRequest.print = '`Object`'
 
 TransactionRequest.details = {
   from: {
@@ -101,7 +186,8 @@ TransactionRequest.details = {
   },
   gas: {
     type: Quantity,
-    desc: 'Integer of the gas provided for the transaction execution. eth_call consumes zero gas, but this parameter may be needed by some executions.',
+    desc:
+      'Integer of the gas provided for the transaction execution. eth_call consumes zero gas, but this parameter may be needed by some executions.',
     optional: true
   },
   gasPrice: {
@@ -116,7 +202,8 @@ TransactionRequest.details = {
   },
   data: {
     type: Data,
-    desc: '4 byte hash of the method signature followed by encoded parameters. For details see [Ethereum Contract ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI).',
+    desc:
+      '4 byte hash of the method signature followed by encoded parameters. For details see [Ethereum Contract ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI).',
     optional: true
   },
   nonce: {
@@ -126,14 +213,15 @@ TransactionRequest.details = {
   },
   condition: {
     type: Object,
-    desc: 'Conditional submission of the transaction. Can be either an integer block number `{ block: 1 }` or UTC timestamp (in seconds) `{ time: 1491290692 }` or `null`.',
+    desc:
+      'Conditional submission of the transaction. Can be either an integer block number `{ block: 1 }` or UTC timestamp (in seconds) `{ time: 1491290692 }` or `null`.',
     optional: true
   }
-};
+}
 
 class PrivateTransactionResponse {}
 
-PrivateTransactionResponse.print = '`Object`';
+PrivateTransactionResponse.print = '`Object`'
 
 PrivateTransactionResponse.details = {
   transactionHash: {
@@ -148,11 +236,11 @@ PrivateTransactionResponse.details = {
     type: Quantity,
     desc: 'Status of the request.'
   }
-};
+}
 
 class TransactionResponse {}
 
-TransactionResponse.print = '`Object`';
+TransactionResponse.print = '`Object`'
 
 TransactionResponse.details = {
   hash: {
@@ -237,7 +325,7 @@ TransactionResponse.details = {
     optional: true,
     desc: 'Conditional submission, Block number in `block` or timestamp in `time` or `null`.'
   }
-};
+}
 
 module.exports = {
   Address,
@@ -252,4 +340,4 @@ module.exports = {
   TransactionResponse,
   RecoveredAccount,
   PrivateTransactionResponse
-};
+}

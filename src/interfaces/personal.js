@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-const { Address, Data, Quantity, TransactionRequest } = require('../types');
+const { Address, Data, Quantity, TransactionRequest, EIP712, EIP191 } = require('../types')
 
 module.exports = {
-
   ecRecover: {
-    desc: 'Returns the address associated with the private key that was used to calculate the signature in `personal_sign`.',
+    desc:
+      'Returns the address associated with the private key that was used to calculate the signature in `personal_sign`.',
     params: [
       {
         type: Data,
@@ -29,7 +29,8 @@ module.exports = {
       {
         type: Data,
         desc: 'Signed data.',
-        example: '0xe7225f986f192f859a9bf84e34b2b7001dfa11aeb5c7164f81a2bee0d79943e2587be1faa11502eba0f803bb0ee071a082b6fe40fba025f3309263a1eef52c711c'
+        example:
+          '0xe7225f986f192f859a9bf84e34b2b7001dfa11aeb5c7164f81a2bee0d79943e2587be1faa11502eba0f803bb0ee071a082b6fe40fba025f3309263a1eef52c711c'
       }
     ],
     returns: {
@@ -45,15 +46,13 @@ module.exports = {
     returns: {
       type: Array,
       desc: 'A list of 20 byte account identifiers.',
-      example: [
-        '0x7bf87721a96849d168de02fd6ea5986a3a147383',
-        '0xca807a90fd64deed760fb98bf0869b475c469348'
-      ]
+      example: ['0x7bf87721a96849d168de02fd6ea5986a3a147383', '0xca807a90fd64deed760fb98bf0869b475c469348']
     }
   },
 
   newAccount: {
-    desc: 'Creates new account.\n\n**Note:** it becomes the new current unlocked account. There can only be one unlocked account at a time.',
+    desc:
+      'Creates new account.\n\n**Note:** it becomes the new current unlocked account. There can only be one unlocked account at a time.',
     params: [
       {
         type: String,
@@ -69,7 +68,8 @@ module.exports = {
   },
 
   sendTransaction: {
-    desc: 'Sends transaction and signs it in a single call. The account does not need to be unlocked to make this call, and will not be left unlocked after.',
+    desc:
+      'Sends transaction and signs it in a single call. The account does not need to be unlocked to make this call, and will not be left unlocked after.',
     params: [
       {
         type: TransactionRequest,
@@ -94,7 +94,8 @@ module.exports = {
     }
   },
   signTransaction: {
-    desc: 'Signs a transaction without dispatching it to the network. It can later be submitted using `eth_sendRawTransaction`. The account does not need to be unlocked to make this call, and will not be left unlocked after.',
+    desc:
+      'Signs a transaction without dispatching it to the network. It can later be submitted using `eth_sendRawTransaction`. The account does not need to be unlocked to make this call, and will not be left unlocked after.',
     params: [
       {
         type: TransactionRequest,
@@ -128,24 +129,25 @@ module.exports = {
       example: {
         raw: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
         tx: {
-          'hash': '0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b',
-          'nonce': '0x0',
-          'blockHash': '0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b',
-          'blockNumber': '0x15df',
-          'transactionIndex': '0x1',
-          'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-          'to': '0x853f43d8a49eeb85d32cf465507dd71d507100c1',
-          'value': '0x7f110',
-          'gas': '0x7f110',
-          'gasPrice': '0x09184e72a000',
-          'input': '0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360'
+          hash: '0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b',
+          nonce: '0x0',
+          blockHash: '0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b',
+          blockNumber: '0x15df',
+          transactionIndex: '0x1',
+          from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+          to: '0x853f43d8a49eeb85d32cf465507dd71d507100c1',
+          value: '0x7f110',
+          gas: '0x7f110',
+          gasPrice: '0x09184e72a000',
+          input: '0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360'
         }
       }
     }
   },
 
   sign: {
-    desc: 'Calculates an Ethereum specific signature with: `sign(keccak256("Ethereum Signed Message: " + len(message) + message)))`.',
+    desc:
+      'Calculates an Ethereum specific signature with: `sign(keccak256("Ethereum Signed Message: " + len(message) + message)))`.',
     params: [
       {
         type: Data,
@@ -166,12 +168,59 @@ module.exports = {
     returns: {
       type: Data,
       desc: 'Signed data.',
-      example: '0xe7225f986f192f859a9bf84e34b2b7001dfa11aeb5c7164f81a2bee0d79943e2587be1faa11502eba0f803bb0ee071a082b6fe40fba025f3309263a1eef52c711c'
+      example:
+        '0xe7225f986f192f859a9bf84e34b2b7001dfa11aeb5c7164f81a2bee0d79943e2587be1faa11502eba0f803bb0ee071a082b6fe40fba025f3309263a1eef52c711c'
     }
   },
 
+  signTypedData: {
+    desc: 'Hashes and signs typed structured data',
+    params: [
+      {
+        type: EIP712,
+        desc: 'EIP-712 compliant data structure to be signed'
+      },
+      {
+        type: Address,
+        desc: '20 Bytes - The address of the account to sign with',
+        example: '0xb60e8dd61c5d32be8058bb8eb970870f07233155'
+      },
+      {
+        type: String,
+        desc: 'The account password',
+        example: 'password'
+      }
+    ]
+  },
+
+  signTypedData: {
+    desc: 'Hashes and signs typed structured data',
+    params: [
+      {
+        type: String,
+        desc: 'EIP-191 version specifier',
+        example: '0x00 for pre-signed transactions, 0x01 for structured data, 0x45 for personal messages'
+      },
+      {
+        type: EIP191,
+        desc: 'data to be signed, depending on the version specified in the first argument'
+      },
+      {
+        type: Address,
+        desc: '20 Bytes - The address of the account to sign with',
+        example: '0xb60e8dd61c5d32be8058bb8eb970870f07233155'
+      },
+      {
+        type: String,
+        desc: 'The account password',
+        example: 'password'
+      }
+    ]
+  },
+
   unlockAccount: {
-    desc: 'Unlocks specified account for use.\n\nIf permanent unlocking is disabled (the default) then the duration argument will be ignored, and the account will be unlocked for a single signing. With permanent locking enabled, the duration sets the number of seconds to hold the account open for. It will default to 300 seconds. Passing 0 unlocks the account indefinitely.\n\nThere can only be one unlocked account at a time.',
+    desc:
+      'Unlocks specified account for use.\n\nIf permanent unlocking is disabled (the default) then the duration argument will be ignored, and the account will be unlocked for a single signing. With permanent locking enabled, the duration sets the number of seconds to hold the account open for. It will default to 300 seconds. Passing 0 unlocks the account indefinitely.\n\nThere can only be one unlocked account at a time.',
     params: [
       {
         type: Address,
@@ -196,4 +245,4 @@ module.exports = {
       example: true
     }
   }
-};
+}
