@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-const { Address, Data, Quantity, TransactionRequest, EIP712, EIP191 } = require('../types')
+const { Address, Data, Quantity, TransactionRequest, EIP712, EIP191 } = require('../types');
 
 module.exports = {
   ecRecover: {
@@ -245,4 +245,4 @@ module.exports = {
       example: true
     }
   }
-}
+};

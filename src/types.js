@@ -30,6 +30,8 @@ class BlockNumber {}
 
 class EIP712 {}
 
+class EIP712Domain {}
+
 class EIP191 {}
 
 class PresignedTransaction {}
@@ -43,20 +45,22 @@ PresignedTransaction.details = {
     type: Address,
     desc: 'address of the contract that validates the presigned transaction'
   }
-}
+};
 
-EIP191.print = '`EIP712` or `Data` or `PresignedTransaction`'
+EIP191.print = '`EIP712` or `Data` or `PresignedTransaction`';
 
-BlockNumber.print = '`Quantity` or `Tag`'
+BlockNumber.print = '`Quantity` or `Tag`';
 
 class CallRequest {}
 
-CallRequest.print = '`Object`'
+CallRequest.print = '`Object`';
 
-EIP712Domain.print = {
+EIP712Domain.print = '`Object`';
+
+EIP712Domain.details = {
   name: {
     type: String,
-    desc: 'User readable name of signing domain, i.e. the name of the DApp or the protocol',
+    desc: 'User readable name of signing domain, i.e. the name of the Dapp or the protocol',
     example: 'Ether Mail'
   },
   verifyingContract: {
@@ -73,11 +77,14 @@ EIP712Domain.print = {
   },
   salt: {
     type: Data,
-    desc: '(Optional) should be used as a last resort domain seperator'
+    desc: 'Should be used as a last resort domain seperator',
+    Optional: true
   }
-}
+};
 
-EIP712.print = {
+EIP712.print = '`Object`';
+
+EIP712.details = {
   primaryType: {
     type: String,
     desc: 'name of the struct defined in `types` that is the same type as `message`'
@@ -103,7 +110,7 @@ EIP712.print = {
   },
   types: {
     type: Object,
-    desc: "type definitions for the EIP712Domain and the primaryType as well as it's dependent types",
+    desc: 'type definitions for the EIP712Domain and the primaryType as well as its dependent types',
     example: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -115,7 +122,7 @@ EIP712.print = {
       Mail: [{ name: 'from', type: 'Person' }, { name: 'to', type: 'Person' }, { name: 'contents', type: 'string' }]
     }
   }
-}
+};
 
 CallRequest.details = {
   from: {
@@ -149,11 +156,11 @@ CallRequest.details = {
       '4 byte hash of the method signature followed by encoded parameters. For details see [Ethereum Contract ABI](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI).',
     optional: true
   }
-}
+};
 
 class RecoveredAccount {}
 
-RecoveredAccount.print = '`Object`'
+RecoveredAccount.print = '`Object`';
 
 RecoveredAccount.details = {
   address: {
@@ -168,11 +175,11 @@ RecoveredAccount.details = {
     type: Boolean,
     desc: 'Flag that reports if this signture was produced for the current chain spec'
   }
-}
+};
 
 class TransactionRequest {}
 
-TransactionRequest.print = '`Object`'
+TransactionRequest.print = '`Object`';
 
 TransactionRequest.details = {
   from: {
@@ -217,11 +224,11 @@ TransactionRequest.details = {
       'Conditional submission of the transaction. Can be either an integer block number `{ block: 1 }` or UTC timestamp (in seconds) `{ time: 1491290692 }` or `null`.',
     optional: true
   }
-}
+};
 
 class PrivateTransactionResponse {}
 
-PrivateTransactionResponse.print = '`Object`'
+PrivateTransactionResponse.print = '`Object`';
 
 PrivateTransactionResponse.details = {
   transactionHash: {
@@ -236,11 +243,11 @@ PrivateTransactionResponse.details = {
     type: Quantity,
     desc: 'Status of the request.'
   }
-}
+};
 
 class TransactionResponse {}
 
-TransactionResponse.print = '`Object`'
+TransactionResponse.print = '`Object`';
 
 TransactionResponse.details = {
   hash: {
@@ -325,11 +332,13 @@ TransactionResponse.details = {
     optional: true,
     desc: 'Conditional submission, Block number in `block` or timestamp in `time` or `null`.'
   }
-}
+};
 
 module.exports = {
   Address,
   Data,
+  EIP191,
+  EIP712,
   Float,
   Hash,
   Integer,
@@ -340,4 +349,4 @@ module.exports = {
   TransactionResponse,
   RecoveredAccount,
   PrivateTransactionResponse
-}
+};

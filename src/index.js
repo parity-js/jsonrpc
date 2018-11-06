@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
+const debug = require('./interfaces/debug');
 const eth = require('./interfaces/eth');
 const net = require('./interfaces/net');
 const parity = require('./interfaces/parity');
@@ -27,6 +28,7 @@ const web3 = require('./interfaces/web3');
 const secretstore = require('./interfaces/secretstore');
 
 module.exports = {
+  debug,
   eth,
   parity,
   net,
