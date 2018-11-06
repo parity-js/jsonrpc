@@ -36,6 +36,7 @@ class EIP191 {}
 
 class PresignedTransaction {}
 
+PresignedTransaction.print = '`Object`';
 PresignedTransaction.details = {
   data: {
     type: Data,
@@ -48,6 +49,21 @@ PresignedTransaction.details = {
 };
 
 EIP191.print = '`EIP712` or `Data` or `PresignedTransaction`';
+
+EIP191.details = {
+  EIP712: {
+    type: EIP712,
+    desc: 'EIP-712 compliant data structure, if version specified is `0x01`'
+  },
+  Data: {
+    type: Data,
+    desc: 'hashed message to sign, if version specified is `0x45`'
+  },
+  PresignedTransaction: {
+    type: PresignedTransaction,
+    desc: 'presigned transaction data, if version specified is `0x00`'
+  }
+};
 
 BlockNumber.print = '`Quantity` or `Tag`';
 
@@ -95,22 +111,10 @@ EIP712.details = {
   },
   message: {
     type: Object,
-    desc: 'Structured message to be signed',
-    example: {
-      from: {
-        name: 'Cow',
-        wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826'
-      },
-      to: {
-        name: 'Bob',
-        wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB'
-      },
-      contents: 'Hello, Bob!'
-    }
+    desc: 'Structured message to be signed'
   },
   types: {
     type: Object,
-    desc: 'type definitions for the EIP712Domain and the primaryType as well as its dependent types',
     example: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -120,7 +124,8 @@ EIP712.details = {
       ],
       Person: [{ name: 'name', type: 'string' }, { name: 'wallet', type: 'address' }],
       Mail: [{ name: 'from', type: 'Person' }, { name: 'to', type: 'Person' }, { name: 'contents', type: 'string' }]
-    }
+    },
+    desc: "type definitions for the `EIP712Domain` and the 'primaryType' as well as it's dependent types"
   }
 };
 
