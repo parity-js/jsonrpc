@@ -239,12 +239,16 @@ module.exports = {
       {
         type: String,
         desc: 'EIP-191 version specifier',
-        example: '0x00 for pre-signed transactions, 0x01 for structured data(EIP712), 0x45 for personal messages'
+        example: '0x00'
       },
       {
         type: EIP191,
         desc: 'data to be signed, depending on the version specified in the first argument',
-        example: '`PresignedTransaction` or `EIP712` or `Data`'
+        example: {
+          validator: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
+          data:
+            '0xe7225f986f192f859a9bf84e34b2b7001dfa11aeb5c7164f81a2bee0d79943e2587be1faa11502eba0f803bb0ee071a082b6fe40fba025f3309263a1eef52c711c'
+        }
       },
       {
         type: Address,

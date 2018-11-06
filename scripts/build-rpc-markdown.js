@@ -45,12 +45,11 @@ function printType (type, obj) {
   return type.print || `\`${type.name}\``;
 }
 
-function formatDescription (obj, prefix = '', indent = '', { showType, showDash } = { showType: true, showDash: true }) {
+function formatDescription (obj, prefix = '', indent = '', show = true) {
   const optional = obj.optional ? '(optional) ' : '';
   const defaults = obj.default ? `(default: \`${obj.default}\`) ` : '';
 
-  return `${indent}${prefix}${showType && printType(obj.type, obj)} ${showDash &&
-    '-'} ${optional}${defaults}${obj.desc || ''}`;
+  return `${indent}${prefix}${show && printType(obj.type, obj)} ${show && '-'} ${optional}${defaults}${obj.desc || ''}`;
 }
 
 function formatRecursiveType (obj, indent = '') {
@@ -60,16 +59,15 @@ function formatRecursiveType (obj, indent = '') {
 
   const details = obj.details || obj.type.details;
 
-  const sub = Object.keys(details).map(key => {
-    let data = formatRecursiveType(details[key], '    ');
+  const sub = Object.keys(details)
+    .map(key => {
+      let data = formatRecursiveType(details[key], `${indent}    `);
 
-    return formatDescription({ type: details[key].type, desc: `${data}` }, `\`${key}\`: `, `${indent}    - `, {
-      showType: '',
-      showDash: ''
-    });
-  });
+      return formatDescription({ type: details[key].type, desc: `${data}` }, `\`${key}\`: `, `${indent}    - `, '');
+    })
+    .join('\n');
 
-  return `${formatDescription(obj)}\n${sub.join('\n')}`;
+  return `${formatDescription(obj)}\n${sub}`;
 }
 
 function formatType (obj) {
