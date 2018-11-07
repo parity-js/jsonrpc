@@ -14,25 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-const db = require('./interfaces/db');
+const debug = require('./interfaces/debug');
 const eth = require('./interfaces/eth');
 const net = require('./interfaces/net');
 const parity = require('./interfaces/parity');
 const personal = require('./interfaces/personal');
 const privateMod = require('./interfaces/private');
-const shh = require('./interfaces/shh');
+// TODO review all shh function in rust to match with JSON RPC functions
+// const shh = require('./interfaces/shh');
 const signer = require('./interfaces/signer');
 const trace = require('./interfaces/trace');
 const web3 = require('./interfaces/web3');
+const secretstore = require('./interfaces/secretstore');
 
 module.exports = {
-  db,
+  debug,
   eth,
   parity,
   net,
   personal,
   private: privateMod,
-  shh,
+  secretstore,
+  // TODO review all shh function in rust to match with JSON RPC functions
+  //  shh,
   signer,
   trace,
   web3

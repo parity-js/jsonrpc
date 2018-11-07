@@ -348,6 +348,136 @@ then it should look something like:
       }
     },
 
+    callMany: {
+      section: SECTION_ADHOC,
+      desc: 'Performs multiple call traces on top of the same block. i.e. transaction `n` will be executed on top of a pending block with all `n-1` transactions applied (traced) first. Allows to trace dependent transactions.',
+      params: [
+        {
+          type: Array,
+          desc: 'List of trace calls with the type of trace, one or more of: `"vmTrace"`, `"trace"`, `"stateDiff"`.',
+          example:
+          [
+            [
+              {
+                'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+                'to': '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+                'value': '0x186a0'
+              },
+              ['trace']
+            ], [
+              {
+                'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+                'to': '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+                'value': '0x186a0'
+              },
+              ['trace']
+            ]
+          ]
+        }, {
+          type: BlockNumber,
+          desc: 'integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
+          format: 'inputDefaultBlockNumberFormatter',
+          example: 'latest',
+          optional: true
+        }
+      ],
+      returns: {
+        type: Array,
+        desc: 'Array of the given transactions\' traces',
+        example: [
+          {
+            'output': '0x',
+            'stateDiff': null,
+            'trace': [
+              {
+                'action': {
+                  'callType': 'call',
+                  'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+                  'gas': '0x1dcd12f8',
+                  'input': '0x',
+                  'to': '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+                  'value': '0x186a0'
+                },
+                'result': {
+                  'gasUsed': '0x0',
+                  'output': '0x'
+                },
+                'subtraces': 0,
+                'traceAddress': [],
+                'type': 'call'
+              }
+            ],
+            'vmTrace': null
+          },
+          {
+            'output': '0x',
+            'stateDiff': null,
+            'trace': [
+              {
+                'action': {
+                  'callType': 'call',
+                  'from': '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+                  'gas': '0x1dcd12f8',
+                  'input': '0x',
+                  'to': '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+                  'value': '0x186a0'
+                },
+                'result': {
+                  'gasUsed': '0x0',
+                  'output': '0x'
+                },
+                'subtraces': 0,
+                'traceAddress': [],
+                'type': 'call'
+              }
+            ],
+            'vmTrace': null
+          }
+        ]
+      }
+    },
+
+    replayBlockTransactions: {
+      section: SECTION_ADHOC,
+      desc: 'Replays all transactions in a block returning the requested traces for each transaction.',
+      params: [
+        {
+          type: BlockNumber,
+          desc: 'Integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`.',
+          example: '0x2ed119'
+        },
+        {
+          type: Array,
+          desc: 'Type of trace, one or more of: `"vmTrace"`, `"trace"`, `"stateDiff"`.',
+          example: ['trace']
+        }
+      ],
+      returns:
+      {
+        type: Array,
+        desc: 'Block transactions traces.',
+        example:
+        [
+          {
+            'output': '0x',
+            'stateDiff': null,
+            'trace': [{
+              'action': new Dummy('{ ... }'),
+              'result': {
+                'gasUsed': '0x0',
+                'output': '0x'
+              },
+              'subtraces': 0,
+              'traceAddress': [],
+              'type': 'call'
+            }],
+            'vmTrace': null
+          },
+          new Dummy('{ ... }')
+        ]
+      }
+    },
+
     replayTransaction: {
       section: SECTION_ADHOC,
       desc: 'Replays a transaction, returning the traces.',

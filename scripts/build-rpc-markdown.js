@@ -29,8 +29,8 @@ if (!fs.existsSync(ROOT_DIR)) {
   fs.mkdirSync(ROOT_DIR);
 }
 
-Object.keys(rustMethods).forEach((group) => {
-  Object.keys(rustMethods[group]).forEach((method) => {
+Object.keys(rustMethods).forEach(group => {
+  Object.keys(rustMethods[group]).forEach(method => {
     if (interfaces[group] == null || interfaces[group][method] == null) {
       error(`${group}_${method} is defined in Rust traits, but not in js/src/jsonrpc/interfaces`);
     }
@@ -45,11 +45,29 @@ function printType (type, obj) {
   return type.print || `\`${type.name}\``;
 }
 
-function formatDescription (obj, prefix = '', indent = '') {
+function formatDescription (obj, prefix = '', indent = '', show = true) {
   const optional = obj.optional ? '(optional) ' : '';
   const defaults = obj.default ? `(default: \`${obj.default}\`) ` : '';
 
-  return `${indent}${prefix}${printType(obj.type, obj)} - ${optional}${defaults}${obj.desc}`;
+  return `${indent}${prefix}${show && printType(obj.type, obj)} ${show && '-'} ${optional}${defaults}${obj.desc || ''}`;
+}
+
+function formatRecursiveType (obj, indent = '') {
+  if (obj.details == null && obj.type.details == null) {
+    return formatDescription(obj);
+  }
+
+  const details = obj.details || obj.type.details;
+
+  const sub = Object.keys(details)
+    .map(key => {
+      let data = formatRecursiveType(details[key], `${indent}    `);
+
+      return formatDescription({ type: details[key].type, desc: `${data}` }, `\`${key}\`: `, `${indent}    - `, '');
+    })
+    .join('\n');
+
+  return `${formatDescription(obj)}\n${sub}`;
 }
 
 function formatType (obj) {
@@ -57,19 +75,7 @@ function formatType (obj) {
     return obj;
   }
 
-  const details = obj.details || obj.type.details;
-
-  if (details) {
-    const sub = Object.keys(details).map((key) => {
-      return formatDescription(details[key], `\`${key}\`: `, '    - ');
-    }).join('\n');
-
-    return `${formatDescription(obj)}\n${sub}`;
-  } else if (obj.type && obj.type.name) {
-    return formatDescription(obj);
-  }
-
-  return obj;
+  return formatRecursiveType(obj);
 }
 
 const rpcReqTemplate = {
@@ -91,7 +97,7 @@ function hasExample ({ optional, example, details } = {}) {
   }
 
   if (details !== undefined) {
-    const values = Object.keys(details).map((key) => details[key]);
+    const values = Object.keys(details).map(key => details[key]);
 
     return values.every(hasExample);
   }
@@ -117,7 +123,7 @@ function getExample (obj) {
   if (example === undefined && details !== undefined) {
     const nested = {};
 
-    Object.keys(details).forEach((key) => {
+    Object.keys(details).forEach(key => {
       nested[key] = getExample(details[key]);
     });
 
@@ -193,6 +199,7 @@ function buildExample (name, method) {
 
   const hasReqExample = method.params.every(hasExample);
   const hasResExample = hasExample(method.returns);
+  const isPubSubApi = !!method.pubsub;
 
   if (!hasReqExample && !hasResExample) {
     error(`${name} has no examples${logPostfix}`);
@@ -206,7 +213,13 @@ function buildExample (name, method) {
     const params = getExample(method.params);
     const req = Dummy.stringifyJSON(Object.assign({}, rpcReqTemplate, { method: name, params }));
 
-    examples.push(`Request\n\`\`\`bash\ncurl --data '${req}' -H "Content-Type: application/json" -X POST localhost:8545\n\`\`\``);
+    if (isPubSubApi) {
+      examples.push(`Request\n\`\`\`bash\nwscat -c localhost:8546\n>${req}\n\`\`\``);
+    } else {
+      examples.push(
+        `Request\n\`\`\`bash\ncurl --data '${req}' -H "Content-Type: application/json" -X POST localhost:8545\n\`\`\``
+      );
+    }
   } else {
     warn(`${name} has a response example but not a request example${logPostfix}`);
   }
@@ -246,83 +259,94 @@ function buildParameters (params) {
   return md;
 }
 
-Object.keys(interfaces).sort().forEach((group) => {
-  const spec = interfaces[group];
+Object.keys(interfaces)
+  .sort()
+  .forEach(group => {
+    const spec = interfaces[group];
 
-  for (const key in spec) {
-    const method = spec[key];
+    for (const key in spec) {
+      const method = spec[key];
 
-    if (!method || !method.subdoc) {
-      continue;
+      if (!method || !method.subdoc) {
+        continue;
+      }
+
+      const subgroup = `${group}_${method.subdoc}`;
+
+      interfaces[subgroup] = interfaces[subgroup] || {};
+
+      interfaces[subgroup][key] = method;
+      delete spec[key];
     }
-
-    const subgroup = `${group}_${method.subdoc}`;
-
-    interfaces[subgroup] = interfaces[subgroup] || {};
-
-    interfaces[subgroup][key] = method;
-    delete spec[key];
-  }
-});
-
-Object.keys(interfaces).sort().forEach((group) => {
-  let preamble = `# The \`${group}\` Module`;
-  let markdown = `## JSON-RPC methods\n`;
-
-  const spec = interfaces[group];
-
-  if (spec._preamble) {
-    preamble = `${preamble}\n\n${spec._preamble}`;
-  }
-
-  const content = [];
-  const tocMain = [];
-  const tocSections = {};
-
-  // Comparator that will sort by sections first, names second
-  function methodComparator (a, b) {
-    const sectionA = spec[a].section || '';
-    const sectionB = spec[b].section || '';
-
-    return sectionA.localeCompare(sectionB) || a.localeCompare(b);
-  }
-
-  Object.keys(spec).sort(methodComparator).forEach((iname) => {
-    const method = spec[iname];
-    const groupName = group.replace(/_.*$/, '');
-    const name = `${groupName}_${iname}`;
-
-    if (method.nodoc || method.deprecated) {
-      info(`Skipping ${name}: ${method.nodoc || 'Deprecated'}`);
-
-      return;
-    }
-
-    if (rustMethods[groupName] == null || rustMethods[groupName][iname] == null) {
-      error(`${name} is defined in js/src/jsonrpc/interfaces, but not in Rust traits`);
-    }
-
-    const desc = method.desc;
-    const params = buildParameters(method.params);
-    const returns = `- ${formatType(method.returns)}`;
-    const example = buildExample(name, method);
-
-    const { section } = method;
-    const toc = section ? tocSections[section] = tocSections[section] || [] : tocMain;
-
-    toc.push(`- [${name}](#${name.toLowerCase()})`);
-    content.push(`### ${name}\n\n${desc}\n\n#### Parameters\n\n${params || 'None'}\n\n#### Returns\n\n${returns || 'None'}${example}`);
   });
 
-  markdown = `${markdown}\n${tocMain.join('\n')}`;
+Object.keys(interfaces)
+  .sort()
+  .forEach(group => {
+    let preamble = `---\ntitle: The \`${group}\` Module\n---`;
+    let markdown = `## JSON-RPC methods\n`;
 
-  Object.keys(tocSections).sort().forEach((section) => {
-    markdown = `${markdown}\n\n#### ${section}\n${tocSections[section].join('\n')}`;
+    const spec = interfaces[group];
+
+    if (spec._preamble) {
+      preamble = `${preamble}\n\n${spec._preamble}`;
+    }
+
+    const content = [];
+    const tocMain = [];
+    const tocSections = {};
+
+    // Comparator that will sort by sections first, names second
+    function methodComparator (a, b) {
+      const sectionA = spec[a].section || '';
+      const sectionB = spec[b].section || '';
+
+      return sectionA.localeCompare(sectionB) || a.localeCompare(b);
+    }
+
+    Object.keys(spec)
+      .sort(methodComparator)
+      .forEach(iname => {
+        const method = spec[iname];
+        const groupName = group.replace(/_.*$/, '');
+        const name = `${groupName}_${iname}`;
+
+        if (method.nodoc || method.deprecated) {
+          info(`Skipping ${name}: ${method.nodoc || 'Deprecated'}`);
+
+          return;
+        }
+
+        if (rustMethods[groupName] == null || rustMethods[groupName][iname] == null) {
+          error(`${name} is defined in js/src/jsonrpc/interfaces, but not in Rust traits`);
+        }
+
+        const desc = method.desc;
+        const params = buildParameters(method.params);
+        const returns = `- ${formatType(method.returns)}`;
+        const example = buildExample(name, method);
+
+        const { section } = method;
+        const toc = section ? (tocSections[section] = tocSections[section] || []) : tocMain;
+
+        toc.push(`- [${name}](#${name.toLowerCase()})`);
+        content.push(
+          `### ${name}\n\n${desc}\n\n#### Parameters\n\n${params || 'None'}\n\n#### Returns\n\n${returns ||
+            'None'}${example}`
+        );
+      });
+
+    markdown = `${markdown}\n${tocMain.join('\n')}`;
+
+    Object.keys(tocSections)
+      .sort()
+      .forEach(section => {
+        markdown = `${markdown}\n\n#### ${section}\n${tocSections[section].join('\n')}`;
+      });
+
+    markdown = `${markdown}\n\n## JSON-RPC API Reference\n\n${content.join('\n\n***\n\n')}\n\n`;
+
+    const mdFile = path.join(ROOT_DIR, `${group}.md`);
+
+    fs.writeFileSync(mdFile, `${preamble}\n\n${markdown}`, 'utf8');
   });
-
-  markdown = `${markdown}\n\n## JSON-RPC API Reference\n\n${content.join('\n\n***\n\n')}\n\n`;
-
-  const mdFile = path.join(ROOT_DIR, `${group}.md`);
-
-  fs.writeFileSync(mdFile, `${preamble}\n\n${markdown}`, 'utf8');
-});

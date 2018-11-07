@@ -14,7 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Parity.  If not, see <http://www.gnu.org/licenses/>.
 
-const { Address, Data, Hash, Quantity, BlockNumber, TransactionRequest, TransactionResponse } = require('../types');
+const {
+  Address,
+  Data,
+  Hash,
+  Quantity,
+  BlockNumber,
+  TransactionRequest,
+  TransactionResponse,
+  RecoveredAccount
+} = require('../types');
 const { fromDecimal, withComment, Dummy } = require('../helpers');
 
 const SECTION_ACCOUNTS = 'Accounts (read-only) and Signatures';
@@ -56,16 +65,6 @@ module.exports = {
     }
   },
 
-  chainId: {
-    desc: 'Returns the current chain ID used for tranaction signing.',
-    params: [],
-    returns: {
-      type: Quantity,
-      desc: 'The current blockchain chain ID',
-      example: '0x1'
-    }
-  },
-
   chainStatus: {
     section: SECTION_NET,
     desc: 'Returns the information on warp sync blocks',
@@ -85,7 +84,7 @@ module.exports = {
 
   changeVault: {
     section: SECTION_VAULT,
-    desc: 'Changes the current valut for the account',
+    desc: 'Changes the current vault for the account',
     params: [
       {
         type: Address,
@@ -149,50 +148,9 @@ module.exports = {
     params: [],
     returns: {
       type: Object,
-      desc: 'or `String` - Either `"capable"`, `{"capableUntil":N}`, `{"incapableSince":N}` or `"unknown"` (`N` is a block number).',
+      desc:
+        'or `String` - Either `"capable"`, `{"capableUntil":N}`, `{"incapableSince":N}` or `"unknown"` (`N` is a block number).',
       example: 'capable'
-    }
-  },
-
-  dappsList: {
-    subdoc: SUBDOC_SET,
-    desc: 'Returns a list of available local dapps.',
-    params: [],
-    returns: {
-      type: Array,
-      desc: 'The list of dapps',
-      example: [
-        {
-          author: 'Parity Technologies Ltd',
-          description: 'A skeleton dapp',
-          iconUrl: 'title.png',
-          id: 'skeleton',
-          name: 'Skeleton',
-          version: '0.1'
-        }
-      ]
-    }
-  },
-
-  dappsRefresh: {
-    subdoc: SUBDOC_SET,
-    desc: 'Returns a boolean value upon success and error upon failure',
-    params: [],
-    returns: {
-      type: Boolean,
-      desc: 'True for success. error details for failure',
-      example: true
-    }
-  },
-
-  dappsUrl: {
-    section: SECTION_NODE,
-    desc: 'Returns the hostname and the port of dapps/rpc server, error if not enabled.',
-    params: [],
-    returns: {
-      type: String,
-      desc: 'The hostname and port number',
-      example: 'localhost:8545'
     }
   },
 
@@ -237,11 +195,12 @@ module.exports = {
 
   devLogsLevels: {
     section: SECTION_DEV,
-    desc: 'Returns current logging level settings. Logging level can be set with `--logging` and be one of: `""` (default), `"info"`, `"debug"`, `"warn"`, `"error"`, `"trace"`.',
+    desc:
+      'Returns current logging level settings. Logging level can be set with `--logging` and be one of: `""` (default), `"info"`, `"debug"`, `"warn"`, `"error"`, `"trace"`.',
     params: [],
     returns: {
       type: String,
-      decs: 'Current log level.',
+      desc: 'Current log level.',
       example: 'debug'
     }
   },
@@ -253,7 +212,8 @@ module.exports = {
     returns: {
       type: String,
       desc: 'Enode URI',
-      example: 'enode://050929adcfe47dbe0b002cb7ef2bf91ca74f77c4e0f68730e39e717f1ce38908542369ae017148bee4e0d968340885e2ad5adea4acd19c95055080a4b625df6a@172.17.0.1:30303'
+      example:
+        'enode://050929adcfe47dbe0b002cb7ef2bf91ca74f77c4e0f68730e39e717f1ce38908542369ae017148bee4e0d968340885e2ad5adea4acd19c95055080a4b625df6a@172.17.0.1:30303'
     }
   },
 
@@ -310,7 +270,19 @@ module.exports = {
         }
       },
       example: {
-        bucketBounds: ['0x4a817c800', '0x525433d01', '0x5a26eb202', '0x61f9a2703', '0x69cc59c04', '0x719f11105', '0x7971c8606', '0x81447fb07', '0x891737008', '0x90e9ee509', '0x98bca5a0a'],
+        bucketBounds: [
+          '0x4a817c800',
+          '0x525433d01',
+          '0x5a26eb202',
+          '0x61f9a2703',
+          '0x69cc59c04',
+          '0x719f11105',
+          '0x7971c8606',
+          '0x81447fb07',
+          '0x891737008',
+          '0x90e9ee509',
+          '0x98bca5a0a'
+        ],
         counts: [487, 9, 7, 1, 8, 0, 0, 0, 0, 14]
       }
     }
@@ -370,37 +342,6 @@ module.exports = {
     }
   },
 
-  lockedHardwareAccountsInfo: {
-    desc: 'Provides a list of paths to locked hardware wallets',
-    params: [],
-    returns: {
-      type: Array,
-      desc: 'Paths of all locked hardware wallets',
-      example: "['/dev/hidraw0']"
-    }
-  },
-
-  hardwarePinMatrixAck: {
-    desc: 'Send a pin to a hardware wallet at a specific path to unlock it',
-    params: [
-      {
-        type: String,
-        desc: 'path to the device',
-        example: 'USB_2b24_0001_14100000'
-      },
-      {
-        type: String,
-        desc: 'the pin as recieved from the pin matrix',
-        example: '1234'
-      }
-    ],
-    returns: {
-      type: Boolean,
-      desc: 'Whether or not the pin entry successfully unlocked the device',
-      example: true
-    }
-  },
-
   listOpenedVaults: {
     desc: 'Returns a list of all opened vaults',
     params: [],
@@ -446,8 +387,10 @@ module.exports = {
             },
             chainId: null,
             nonce: '0x0',
-            publicKey: '0x3fa8c08c65a83f6b4ea3e04e1cc70cbe3cd391499e3e05ab7dedf28aff9afc538200ff93e3f2b2cb5029f03c7ebee820d63a4c5a9541c83acebe293f54cacf0e',
-            raw: '0xf868808502d20cff33830e57e09400a289b43e1e4825dbedf2a78ba60a640634dc40830fffff801ca034c333b0b91cd832a3414d628e3fea29a00055cebf5ba59f7038c188404c0cf3a0524fd9b35be170439b5ffe89694ae0cfc553cb49d1d8b643239e353351531532',
+            publicKey:
+              '0x3fa8c08c65a83f6b4ea3e04e1cc70cbe3cd391499e3e05ab7dedf28aff9afc538200ff93e3f2b2cb5029f03c7ebee820d63a4c5a9541c83acebe293f54cacf0e',
+            raw:
+              '0xf868808502d20cff33830e57e09400a289b43e1e4825dbedf2a78ba60a640634dc40830fffff801ca034c333b0b91cd832a3414d628e3fea29a00055cebf5ba59f7038c188404c0cf3a0524fd9b35be170439b5ffe89694ae0cfc553cb49d1d8b643239e353351531532',
             standardV: '0x1',
             v: '0x1c',
             r: '0x34c333b0b91cd832a3414d628e3fea29a00055cebf5ba59f7038c188404c0cf3',
@@ -459,7 +402,6 @@ module.exports = {
       }
     }
   },
-
   minGasPrice: {
     section: SECTION_MINING,
     desc: 'Returns currently set minimal gas price',
@@ -531,7 +473,7 @@ module.exports = {
 
   netPeers: {
     section: SECTION_NET,
-    desc: 'Returns number of peers.',
+    desc: 'Returns connected peers. Peers with non-empty protocols have completed handshake.',
     params: [],
     returns: {
       type: Object,
@@ -598,7 +540,8 @@ module.exports = {
 
   nextNonce: {
     section: SECTION_NET,
-    desc: 'Returns next available nonce for transaction from given account. Includes pending block and transaction queue.',
+    desc:
+      'Returns next available nonce for transaction from given account. Includes pending block and transaction queue.',
     params: [
       {
         type: Address,
@@ -663,15 +606,18 @@ module.exports = {
           gas: '0x23b58',
           gasPrice: '0xba43b7400',
           hash: '0x160b3c30ab1cf5871083f97ee1cee3901cfba3b0a2258eb337dd20a7e816b36e',
-          input: '0x095ea7b3000000000000000000000000bf4ed7b27f1d666546e30d74d50d173d20bca75400000000000000000000000000002643c948210b4bd99244ccd64d5555555555',
+          input:
+            '0x095ea7b3000000000000000000000000bf4ed7b27f1d666546e30d74d50d173d20bca75400000000000000000000000000002643c948210b4bd99244ccd64d5555555555',
           condition: {
             block: 1
           },
           chainId: 1,
           nonce: '0x5',
-          publicKey: '0x96157302dade55a1178581333e57d60ffe6fdf5a99607890456a578b4e6b60e335037d61ed58aa4180f9fd747dc50d44a7924aa026acbfb988b5062b629d6c36',
+          publicKey:
+            '0x96157302dade55a1178581333e57d60ffe6fdf5a99607890456a578b4e6b60e335037d61ed58aa4180f9fd747dc50d44a7924aa026acbfb988b5062b629d6c36',
           r: '0x92e8beb19af2bad0511d516a86e77fa73004c0811b2173657a55797bdf8558e1',
-          raw: '0xf8aa05850ba43b740083023b5894bb9bc244d798123fde783fcc1c72d3bb8c18941380b844095ea7b3000000000000000000000000bf4ed7b27f1d666546e30d74d50d173d20bca75400000000000000000000000000002643c948210b4bd99244ccd64d555555555526a092e8beb19af2bad0511d516a86e77fa73004c0811b2173657a55797bdf8558e1a062b4d4d125bbcb9c162453bc36ca156537543bb4414d59d1805d37fb63b351b8',
+          raw:
+            '0xf8aa05850ba43b740083023b5894bb9bc244d798123fde783fcc1c72d3bb8c18941380b844095ea7b3000000000000000000000000bf4ed7b27f1d666546e30d74d50d173d20bca75400000000000000000000000000002643c948210b4bd99244ccd64d555555555526a092e8beb19af2bad0511d516a86e77fa73004c0811b2173657a55797bdf8558e1a062b4d4d125bbcb9c162453bc36ca156537543bb4414d59d1805d37fb63b351b8',
           s: '0x62b4d4d125bbcb9c162453bc36ca156537543bb4414d59d1805d37fb63b351b8',
           standardV: '0x1',
           to: '0xbb9bc244d798123fde783fcc1c72d3bb8c189413',
@@ -706,12 +652,15 @@ module.exports = {
 
   removeTransaction: {
     section: SECTION_NET,
-    desc: 'Removes transaction from local transaction pool. Scheduled transactions and not-propagated transactions are safe to remove, removal of other transactions may have no effect though.',
-    params: [{
-      type: Hash,
-      desc: 'Hash of transaction to remove.',
-      example: '0x2547ea3382099c7c76d33dd468063b32d41016aacb02cbd51ebc14ff5d2b6a43'
-    }],
+    desc:
+      'Removes transaction from local transaction pool. Scheduled transactions and not-propagated transactions are safe to remove, removal of other transactions may have no effect though.',
+    params: [
+      {
+        type: Hash,
+        desc: 'Hash of transaction to remove.',
+        example: '0x2547ea3382099c7c76d33dd468063b32d41016aacb02cbd51ebc14ff5d2b6a43'
+      }
+    ],
     returns: {
       type: Object,
       desc: 'Removed transaction or `null`.',
@@ -725,15 +674,18 @@ module.exports = {
           gas: '0x23b58',
           gasPrice: '0xba43b7400',
           hash: '0x160b3c30ab1cf5871083f97ee1cee3901cfba3b0a2258eb337dd20a7e816b36e',
-          input: '0x095ea7b3000000000000000000000000bf4ed7b27f1d666546e30d74d50d173d20bca75400000000000000000000000000002643c948210b4bd99244ccd64d5555555555',
+          input:
+            '0x095ea7b3000000000000000000000000bf4ed7b27f1d666546e30d74d50d173d20bca75400000000000000000000000000002643c948210b4bd99244ccd64d5555555555',
           condition: {
             block: 1
           },
           chainId: 1,
           nonce: '0x5',
-          publicKey: '0x96157302dade55a1178581333e57d60ffe6fdf5a99607890456a578b4e6b60e335037d61ed58aa4180f9fd747dc50d44a7924aa026acbfb988b5062b629d6c36',
+          publicKey:
+            '0x96157302dade55a1178581333e57d60ffe6fdf5a99607890456a578b4e6b60e335037d61ed58aa4180f9fd747dc50d44a7924aa026acbfb988b5062b629d6c36',
           r: '0x92e8beb19af2bad0511d516a86e77fa73004c0811b2173657a55797bdf8558e1',
-          raw: '0xf8aa05850ba43b740083023b5894bb9bc244d798123fde783fcc1c72d3bb8c18941380b844095ea7b3000000000000000000000000bf4ed7b27f1d666546e30d74d50d173d20bca75400000000000000000000000000002643c948210b4bd99244ccd64d555555555526a092e8beb19af2bad0511d516a86e77fa73004c0811b2173657a55797bdf8558e1a062b4d4d125bbcb9c162453bc36ca156537543bb4414d59d1805d37fb63b351b8',
+          raw:
+            '0xf8aa05850ba43b740083023b5894bb9bc244d798123fde783fcc1c72d3bb8c18941380b844095ea7b3000000000000000000000000bf4ed7b27f1d666546e30d74d50d173d20bca75400000000000000000000000000002643c948210b4bd99244ccd64d555555555526a092e8beb19af2bad0511d516a86e77fa73004c0811b2173657a55797bdf8558e1a062b4d4d125bbcb9c162453bc36ca156537543bb4414d59d1805d37fb63b351b8',
           s: '0x62b4d4d125bbcb9c162453bc36ca156537543bb4414d59d1805d37fb63b351b8',
           standardV: '0x1',
           to: '0xbb9bc244d798123fde783fcc1c72d3bb8c189413',
@@ -886,7 +838,8 @@ module.exports = {
         },
         track: {
           type: String,
-          desc: 'Track on which it was released, one of: `"stable"`, `"beta"`, `"nightly"`, `"testing"`, `"null"` (unknown or self-built).'
+          desc:
+            'Track on which it was released, one of: `"stable"`, `"beta"`, `"nightly"`, `"testing"`, `"null"` (unknown or self-built).'
         },
         version: {
           type: Object,
@@ -921,7 +874,7 @@ module.exports = {
       },
       {
         type: BlockNumber,
-        desc: 'integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`.',
+        desc: "integer block number, or the string `'latest'`, `'earliest'` or `'pending'`.",
         format: 'inputDefaultBlockNumberFormatter',
         optional: true
       }
@@ -940,7 +893,8 @@ module.exports = {
   },
 
   listStorageKeys: {
-    desc: 'Returns all storage keys of the given address (first parameter) if Fat DB is enabled (`--fat-db`), `null` otherwise.',
+    desc:
+      'Returns all storage keys of the given address (first parameter) if Fat DB is enabled (`--fat-db`), `null` otherwise.',
     params: [
       {
         type: Address,
@@ -959,7 +913,7 @@ module.exports = {
       },
       {
         type: BlockNumber,
-        desc: 'integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`.',
+        desc: "integer block number, or the string `'latest'`, `'earliest'` or `'pending'`.",
         format: 'inputDefaultBlockNumberFormatter',
         optional: true
       }
@@ -977,13 +931,107 @@ module.exports = {
     }
   },
 
+  call: {
+    desc:
+      'perform multiple `eth_call` requests on top of each other, i.e. transaction n will be executed on top of a pending block with all n-1 transactions applied first. Allows to get a result of execution of dependent transactions.',
+    params: [
+      {
+        type: Array,
+        desc: "List of transaction's object to be called in sequence",
+        example: [
+          {
+            from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+            to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+            value: '0x186a0'
+          },
+          {
+            from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+            to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+            value: '0x186a0'
+          }
+        ]
+      }
+    ],
+    returns: {
+      type: Array,
+      desc: 'List of the return value of each call.',
+      example: ['0x', '0x']
+    }
+  },
+
+  allTransactionHashes: {
+    desc: 'Request the list of transactions present in the transaction pool/ transaction queue',
+    params: [],
+    returns: {
+      type: Array,
+      desc: "List of transaction hash present in the node's transaction pool",
+      example: [
+        '0x530683c1197f5b78a93d2ac07d41bd51913ddabd703b332b7024c0a8b45ab1ef',
+        '0x385ad71ae858c3b229c30d4ac690f86396f8fd48b32bdba966306a9c95ab52ad',
+        '0xdabc1f5156b2635f60c67d8cc27e9b07526f9239e9af821e80655766365dfa8d'
+      ]
+    }
+  },
+
+  getBlockReceipts: {
+    desc:
+      'Get receipts from all transactions from particular block, more efficient than fetching the receipts one-by-one',
+    params: [
+      {
+        type: BlockNumber,
+        desc:
+          "integer of a block number, or the string `'earliest'`, `'latest'` or `'pending'`, as in the default block parameter.",
+        example: '0x8D2B29'
+      }
+    ],
+    returns: {
+      desc: "The list of all the transaction's receipts of the given block",
+      type: Array,
+      example: [
+        {
+          blockHash: '0x64d67cf84d95f8dfa1e1c3b5a5260aaf801ac99529b4ec3ae19bb06ba78c7bd5',
+          blockNumber: '0x8d2b29',
+          contractAddress: null,
+          cumulativeGasUsed: '0x5208',
+          from: '0x4d6bb4ed029b33cf25d0810b029bd8b1a6bcab7b',
+          gasUsed: '0x5208',
+          logs: [],
+          logsBloom:
+            '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+          root: null,
+          status: '0x1',
+          to: '0xe9c245293dac615c11a5bf26fcec91c3617645e4',
+          transactionHash: '0x1eba82fb5e8426b520c49a5d8dc6c24157e8f45fb9102aca4a99f5617c1539fc',
+          transactionIndex: '0x0'
+        },
+        {
+          blockHash: '0x64d67cf84d95f8dfa1e1c3b5a5260aaf801ac99529b4ec3ae19bb06ba78c7bd5',
+          blockNumber: '0x8d2b29',
+          contractAddress: null,
+          cumulativeGasUsed: '0x3fc28',
+          from: '0x0caf0d921b2bd24ca04e1f06344e976af223783b',
+          gasUsed: '0x3aa20',
+          logs: [],
+          logsBloom:
+            '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+          root: null,
+          status: '0x1',
+          to: '0xf2bb17cb59746cae43d65eec233925b6584cddef',
+          transactionHash: '0x70a50d28db69e5c7a8686141f282530d52e7e3c625296dc53eb5684afa727886',
+          transactionIndex: '0x1'
+        }
+      ]
+    }
+  },
+
   encryptMessage: {
     desc: 'Encrypt some data with a public key under ECIES.',
     params: [
       {
         type: Hash,
         desc: 'Public EC key generated with `secp256k1` curve, truncated to the last 64 bytes.',
-        example: '0xD219959D466D666060284733A80DDF025529FEAA8337169540B3267B8763652A13D878C40830DD0952639A65986DBEC611CF2171A03CFDC37F5A40537068AA4F'
+        example:
+          '0xD219959D466D666060284733A80DDF025529FEAA8337169540B3267B8763652A13D878C40830DD0952639A65986DBEC611CF2171A03CFDC37F5A40537068AA4F'
       },
       {
         type: Data,
@@ -994,12 +1042,14 @@ module.exports = {
     returns: {
       type: Data,
       desc: 'Encrypted message.',
-      example: '0x0491debeec5e874a453f84114c084c810708ebcb553b02f1b8c05511fa4d1a25fa38eb49a32c815e2b39b7bcd56d66648bf401067f15413dae683084ca7b01e21df89be9ec4bc6c762a657dbd3ba1540f557e366681b53629bb2c02e1443b5c0adc6b68f3442c879456d6a21ec9ed07847fa3c3ecb73ec7ee9f8e32d'
+      example:
+        '0x0491debeec5e874a453f84114c084c810708ebcb553b02f1b8c05511fa4d1a25fa38eb49a32c815e2b39b7bcd56d66648bf401067f15413dae683084ca7b01e21df89be9ec4bc6c762a657dbd3ba1540f557e366681b53629bb2c02e1443b5c0adc6b68f3442c879456d6a21ec9ed07847fa3c3ecb73ec7ee9f8e32d'
     }
   },
 
   futureTransactions: {
-    desc: 'Returns all future transactions from transaction queue.',
+    desc:
+      '**This method is deprecated in favor of [parity_allTransactions](#parity_allTransactions)**\n\nReturns all future transactions from transaction queue.',
     params: [],
     returns: {
       type: Array,
@@ -1019,8 +1069,10 @@ module.exports = {
           gas: '0x5208',
           input: '0x',
           creates: null,
-          raw: '0xf86c018504a817c80082520894f5d405530dabfbd0c1cab7a5812f008aa5559adf882efc004ac03a49968025a0b40c6967a7e8bbdfd99a25fd306b9ef23b80e719514aeb7ddd19e2303d6fc139a06bf770ab08119e67dc29817e1412a0e3086f43da308c314db1b3bca9fb6d32bd',
-          publicKey: '0xeba33fd74f06236e17475bc5b6d1bac718eac048350d77d3fc8fbcbd85782a57c821255623c4fd1ebc9d555d07df453b2579ee557b7203fc256ca3b3401e4027',
+          raw:
+            '0xf86c018504a817c80082520894f5d405530dabfbd0c1cab7a5812f008aa5559adf882efc004ac03a49968025a0b40c6967a7e8bbdfd99a25fd306b9ef23b80e719514aeb7ddd19e2303d6fc139a06bf770ab08119e67dc29817e1412a0e3086f43da308c314db1b3bca9fb6d32bd',
+          publicKey:
+            '0xeba33fd74f06236e17475bc5b6d1bac718eac048350d77d3fc8fbcbd85782a57c821255623c4fd1ebc9d555d07df453b2579ee557b7203fc256ca3b3401e4027',
           chainId: 1,
           standardV: '0x0',
           v: '0x25',
@@ -1034,7 +1086,40 @@ module.exports = {
       ]
     }
   },
-
+  allTransactions: {
+    desc: 'Returns all the transactions from the transaction queue.',
+    params: [],
+    returns: {
+      type: Array,
+      desc: 'Transaction list.',
+      details: TransactionResponse.details,
+      example: [
+        {
+          blockHash: null,
+          blockNumber: null,
+          chainId: null,
+          condition: null,
+          creates: null,
+          from: '0x5f3dffcf347944d3739b0805c934d86c8621997f',
+          gas: '0x493e0',
+          gasPrice: '0x12a05f200',
+          hash: '0x045301a128ffcb4662dd199d1176bdf4cc9f0628e10d6bf120edfb52e3e39a78',
+          input: '0x13f56f730...f3b4dc000',
+          nonce: '0x577',
+          publicKey: '0x3bb...9ce1b1',
+          r: '0x6fd2c7a5dbb8795038ca258196083b3eabe15a20e3020c3f45e88f2e447be410',
+          raw: '0xf88b8247d202...83eef3f8916bb818ce7',
+          s: '0x5993992c547d20234aabfc8c32a58d25784255fef500383eef3f8916bb818ce7',
+          standardV: '0x0',
+          to: '0xe8b2d01ffa0a15736b2370b6e5064f9702c891b6',
+          transactionIndex: null,
+          v: '0x1b',
+          value: '0x0'
+        },
+        new Dummy('{ ... }, { ... }, ...')
+      ]
+    }
+  },
   /*
    * `parity_accounts` module methods
    * ================================
@@ -1268,151 +1353,6 @@ module.exports = {
     }
   },
 
-  setDappAddresses: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Sets the available addresses for a dapp. When provided with non-empty list changes the default account as well.',
-    params: [
-      {
-        type: String,
-        desc: 'Dapp Id.',
-        example: 'web'
-      },
-      {
-        type: Array,
-        desc: 'Array of available accounts available to the dapp or `null` for default list.',
-        example: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1']
-      }
-    ],
-    returns: {
-      type: Boolean,
-      desc: '`true` if the call was successful.',
-      example: true
-    }
-  },
-
-  getDappAddresses: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Returns the list of accounts available to a specific dapp.',
-    params: [
-      {
-        type: String,
-        desc: 'Dapp Id.',
-        example: 'web'
-      }
-    ],
-    returns: {
-      type: Array,
-      desc: 'The list of available accounts.',
-      example: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1']
-    }
-  },
-
-  setDappDefaultAddress: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Changes dapp default address. Does not affect other accounts exposed for this dapp, but default account will always be retured as the first one.',
-    params: [
-      {
-        type: String,
-        desc: 'Dapp Id.',
-        example: 'web'
-      },
-      {
-        type: Address,
-        desc: 'Default Address.',
-        example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
-      }
-    ],
-    returns: {
-      type: Boolean,
-      desc: '`true` if the call was successful',
-      example: true
-    }
-  },
-
-  getDappDefaultAddress: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Returns a default account available to a specific dapp.',
-    params: [
-      {
-        type: String,
-        desc: 'Dapp Id.',
-        example: 'web'
-      }
-    ],
-    returns: {
-      type: Address,
-      desc: 'Default Address',
-      example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
-    }
-  },
-
-  setNewDappsAddresses: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Sets the list of accounts available to new dapps.',
-    params: [
-      {
-        type: Array,
-        desc: 'List of accounts available by default or `null` for all accounts.',
-        example: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1']
-      }
-    ],
-    returns: {
-      type: Boolean,
-      desc: '`true` if the call was successful',
-      example: true
-    }
-  },
-
-  getNewDappsAddresses: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Returns the list of accounts available to a new dapps.',
-    params: [],
-    returns: {
-      type: Array,
-      desc: 'The list of available accounts, can be `null`.',
-      example: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1']
-    }
-  },
-
-  setNewDappsDefaultAddress: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Changes global default address. This setting may be overriden for a specific dapp.',
-    params: [
-      {
-        type: Address,
-        desc: 'Default Address.',
-        example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
-      }
-    ],
-    returns: {
-      type: Boolean,
-      desc: '`true` if the call was successful',
-      example: true
-    }
-  },
-
-  getNewDappsDefaultAddress: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Returns a default account available to dapps.',
-    params: [],
-    returns: {
-      type: Address,
-      desc: 'Default Address',
-      example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
-    }
-  },
-
-  listRecentDapps: {
-    subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Returns a list of the most recent active dapps.',
-    params: [],
-    returns: {
-      type: Array,
-      desc: 'Array of Dapp Ids.',
-      example: ['web']
-    }
-  },
-
   importGethAccounts: {
     subdoc: SUBDOC_ACCOUNTS,
     desc: 'Imports a list of accounts from Geth.',
@@ -1478,7 +1418,8 @@ module.exports = {
 
   deriveAddressIndex: {
     subdoc: SUBDOC_ACCOUNTS,
-    desc: 'Derive new address from given account address using hierarchical derivation (sequence of 32-bit integer indices).',
+    desc:
+      'Derive new address from given account address using hierarchical derivation (sequence of 32-bit integer indices).',
     params: [
       {
         type: Address,
@@ -1492,11 +1433,9 @@ module.exports = {
       },
       {
         type: Array,
-        desc: 'Hierarchical derivation sequence of index and type (`soft` or `hard`). E.g. `[{index:1,type:"hard"},{index:2,type:"soft"}]`.',
-        example: [
-          { index: 1, type: 'hard' },
-          { index: 2, type: 'soft' }
-        ]
+        desc:
+          'Hierarchical derivation sequence of index and type (`soft` or `hard`). E.g. `[{index:1,type:"hard"},{index:2,type:"soft"}]`.',
+        example: [{ index: 1, type: 'hard' }, { index: 2, type: 'soft' }]
       },
       {
         type: Boolean,
@@ -1530,19 +1469,24 @@ module.exports = {
       type: Object,
       desc: 'Standard wallet JSON.',
       example: {
-        'address': '0042e5d2a662eeaca8a7e828c174f98f35d8925b',
-        'crypto': {
-          'cipher': 'aes-128-ctr',
-          'cipherparams': { 'iv': 'a1c6ff99070f8032ca1c4e8add006373' },
-          'ciphertext': 'df27e3db64aa18d984b6439443f73660643c2d119a6f0fa2fa9a6456fc802d75',
-          'kdf': 'pbkdf2',
-          'kdfparams': { 'c': 10240, 'dklen': 32, 'prf': 'hmac-sha256', 'salt': 'ddc325335cda5567a1719313e73b4842511f3e4a837c9658eeb78e51ebe8c815' },
-          'mac': '3dc888ae79cbb226ff9c455669f6cf2d79be72120f2298f6cb0d444fddc0aa3d'
+        address: '0042e5d2a662eeaca8a7e828c174f98f35d8925b',
+        crypto: {
+          cipher: 'aes-128-ctr',
+          cipherparams: { iv: 'a1c6ff99070f8032ca1c4e8add006373' },
+          ciphertext: 'df27e3db64aa18d984b6439443f73660643c2d119a6f0fa2fa9a6456fc802d75',
+          kdf: 'pbkdf2',
+          kdfparams: {
+            c: 10240,
+            dklen: 32,
+            prf: 'hmac-sha256',
+            salt: 'ddc325335cda5567a1719313e73b4842511f3e4a837c9658eeb78e51ebe8c815'
+          },
+          mac: '3dc888ae79cbb226ff9c455669f6cf2d79be72120f2298f6cb0d444fddc0aa3d'
         },
-        'id': '6a186c80-7797-cff2-bc2e-7c1d6a6cc76e',
-        'meta': '{"passwordHint":"parity-export-test","timestamp":1490017814987}',
-        'name': 'parity-export-test',
-        'version': 3
+        id: '6a186c80-7797-cff2-bc2e-7c1d6a6cc76e',
+        meta: '{"passwordHint":"parity-export-test","timestamp":1490017814987}',
+        name: 'parity-export-test',
+        version: 3
       }
     }
   },
@@ -1684,7 +1628,8 @@ module.exports = {
       {
         type: String,
         desc: 'Enode address',
-        example: 'enode://a979fb575495b8d6db44f750317d0f4622bf4c2aa3365d6af7c284339968eef29b69ad0dce72a4d8db5ebb4968de0e3bec910127f134779fbcb0cb6d3331163c@22.99.55.44:7770'
+        example:
+          'enode://a979fb575495b8d6db44f750317d0f4622bf4c2aa3365d6af7c284339968eef29b69ad0dce72a4d8db5ebb4968de0e3bec910127f134779fbcb0cb6d3331163c@22.99.55.44:7770'
       }
     ],
     returns: {
@@ -1701,7 +1646,8 @@ module.exports = {
       {
         type: String,
         desc: 'Encode address',
-        example: 'enode://a979fb575495b8d6db44f750317d0f4622bf4c2aa3365d6af7c284339968eef29b69ad0dce72a4d8db5ebb4968de0e3bec910127f134779fbcb0cb6d3331163c@22.99.55.44:7770'
+        example:
+          'enode://a979fb575495b8d6db44f750317d0f4622bf4c2aa3365d6af7c284339968eef29b69ad0dce72a4d8db5ebb4968de0e3bec910127f134779fbcb0cb6d3331163c@22.99.55.44:7770'
       }
     ],
     returns: {
@@ -1713,7 +1659,8 @@ module.exports = {
 
   dropNonReservedPeers: {
     subdoc: SUBDOC_SET,
-    desc: 'Set Parity to drop all non-reserved peers. To restore default behavior call [parity_acceptNonReservedPeers](#parity_acceptnonreservedpeers).',
+    desc:
+      'Set Parity to drop all non-reserved peers. To restore default behavior call [parity_acceptNonReservedPeers](#parity_acceptnonreservedpeers).',
     params: [],
     returns: {
       type: Boolean,
@@ -1740,7 +1687,7 @@ module.exports = {
       {
         type: String,
         desc: 'The url of the content.',
-        example: 'https://raw.githubusercontent.com/paritytech/parity/master/README.md'
+        example: 'https://raw.githubusercontent.com/paritytech/parity-ethereum/master/README.md'
       }
     ],
     returns: {
@@ -1756,7 +1703,8 @@ module.exports = {
     params: [
       {
         type: String,
-        desc: 'Chain spec name, one of: "foundation", "ropsten", "morden", "kovan", "olympic", "classic", "dev", "expanse", "musicoin" or a filename.',
+        desc:
+          'Chain spec name, one of: "foundation", "ropsten", "morden", "kovan", "classic", "dev", "expanse", "musicoin" or a filename.',
         example: 'foundation'
       }
     ],
@@ -1773,7 +1721,8 @@ module.exports = {
     params: [
       {
         type: String,
-        desc: 'The mode to set, one of:\n  * `"active"` - Parity continuously syncs the chain.\n  * `"passive"` - Parity syncs initially, then sleeps and wakes regularly to resync.\n  * `"dark"` - Parity syncs only when the RPC is active.\n  * `"offline"` - Parity doesn\'t sync.\n',
+        desc:
+          'The mode to set, one of:\n  * `"active"` - Parity continuously syncs the chain.\n  * `"passive"` - Parity syncs initially, then sleeps and wakes regularly to resync.\n  * `"dark"` - Parity syncs only when the RPC is active.\n  * `"offline"` - Parity doesn\'t sync.\n',
         example: 'passive'
       }
     ],
@@ -1786,7 +1735,8 @@ module.exports = {
 
   setEngineSigner: {
     subdoc: SUBDOC_SET,
-    desc: 'Sets an authority account for signing consensus messages. For more information check the [[Proof of Authority Chains]] page.',
+    desc:
+      'Sets an authority account for signing consensus messages. For more information check the [Proof of Authority Chains](Proof-of-Authority-Chains.md) page.',
     params: [
       {
         type: Address,
@@ -1808,7 +1758,8 @@ module.exports = {
 
   upgradeReady: {
     subdoc: SUBDOC_SET,
-    desc: 'Returns a ReleaseInfo object describing the release which is available for upgrade or `null` if none is available.',
+    desc:
+      'Returns a ReleaseInfo object describing the release which is available for upgrade or `null` if none is available.',
     params: [],
     returns: {
       type: Object,
@@ -1853,7 +1804,7 @@ module.exports = {
    */
   postSign: {
     section: SECTION_ACCOUNTS,
-    desc: 'Request an arbitrary transaction to be signed by an account.',
+    desc: 'Request a standard Ethereum message to be signed by an account.',
     params: [
       {
         type: Address,
@@ -1861,14 +1812,14 @@ module.exports = {
         example: '0xb60e8dd61c5d32be8058bb8eb970870f07233155'
       },
       {
-        type: Hash,
-        desc: 'Transaction hash.',
-        example: '0x8cda01991ae267a539135736132f1f987e76868ce0269b7537d3aab37b7b185e'
+        type: Data,
+        desc: 'The message.',
+        example: '0x414243'
       }
     ],
     returns: {
       type: Quantity,
-      desc: 'The id of the request to the signer. If the account was already unlocked, returns `Hash` of the transaction instead.',
+      desc: 'The id of the request to the signer.',
       example: '0x1'
     }
   },
@@ -1897,7 +1848,8 @@ module.exports = {
     ],
     returns: {
       type: Quantity,
-      desc: 'The id of the request to the signer. If the account was already unlocked, returns `Hash` of the transaction instead.',
+      desc:
+        'The id of the request to the signer. If the account was already unlocked, returns `Hash` of the transaction instead.',
       format: 'utils.toDecimal',
       example: '0x1'
     }
@@ -1905,7 +1857,8 @@ module.exports = {
 
   checkRequest: {
     section: SECTION_ACCOUNTS,
-    desc: 'Get the the transaction hash of the request previously posted to [`parity_postTransaction`](#parity_posttransaction) or [`parity_postSign`](#parity_postsign). Will return a JSON-RPC error if the request was rejected.',
+    desc:
+      'Get the the transaction hash of the request previously posted to [`parity_postTransaction`](#parity_posttransaction) or [`parity_postSign`](#parity_postsign). Will return a JSON-RPC error if the request was rejected.',
     params: [
       {
         type: Quantity,
@@ -1915,7 +1868,7 @@ module.exports = {
     ],
     returns: {
       type: Hash,
-      desc: '32 Bytes - the transaction hash or `null` if the request hasn\'t been signed yet.',
+      desc: "32 Bytes - the transaction hash or `null` if the request hasn't been signed yet.",
       example: '0xde8dfd9642f7eeef12402f2a560dbf40921b4f0bda01fb84709b9d71f6c181be'
     }
   },
@@ -1931,7 +1884,8 @@ module.exports = {
       {
         type: Data,
         desc: 'Encrypted message.',
-        example: '0x0405afee7fa2ab3e48c27b00d543389270cb7267fc191ca1311f297255a83cbe8d77a4ba135b51560700a582924fa86d2b19029fcb50d2b68d60a7df1ba81df317a19c8def117f2b9cf8c2618be0e3f146a5272fb9e5528719d2d7a1bd91fa620901cffa756305c79c093e7af30fa3c1587029421351c34a7c1e5a2b'
+        example:
+          '0x0405afee7fa2ab3e48c27b00d543389270cb7267fc191ca1311f297255a83cbe8d77a4ba135b51560700a582924fa86d2b19029fcb50d2b68d60a7df1ba81df317a19c8def117f2b9cf8c2618be0e3f146a5272fb9e5528719d2d7a1bd91fa620901cffa756305c79c093e7af30fa3c1587029421351c34a7c1e5a2b'
       }
     ],
     returns: {
@@ -1963,7 +1917,8 @@ module.exports = {
     returns: {
       type: Data,
       desc: 'Message signature.',
-      example: '0x1d9e33a8cf8bfc089a172bca01da462f9e359c6cb1b0f29398bc884e4d18df4f78588aee4fb5cc067ca62d2abab995e0bba29527be6ac98105b0320020a2efaf00'
+      example:
+        '0x1d9e33a8cf8bfc089a172bca01da462f9e359c6cb1b0f29398bc884e4d18df4f78588aee4fb5cc067ca62d2abab995e0bba29527be6ac98105b0320020a2efaf00'
     }
   },
 
@@ -1978,8 +1933,52 @@ module.exports = {
     }
   },
 
+  verifySignature: {
+    desc:
+      'Recovers the public key and address that produced the given signature, as well as checks for chain replay protection against the current chain spec',
+    params: [
+      {
+        type: Boolean,
+        desc:
+          "flag to indicate if this signature was produced with the '\x19Ethereum Signed Message' prefix, usually signatures gotten from [`eth_signMessage`](JSONRPC-eth-module#eth_signMessage) are prefixed.",
+        example: true
+      },
+      {
+        type: Data,
+        desc: 'Hashed message.',
+        example: '0xbc36789e7a1e281436464229828f817d6612f7b477d66591ff96a9e064bcc98a'
+      },
+      {
+        type: Quantity,
+        desc: 'The R field of the signature.',
+        example: '0x4355c47d63924e8a72e509b65029052eb6c299d53a04e167c5775fd466751c9d'
+      },
+      {
+        type: Quantity,
+        desc: 'The S field of the signature.',
+        example: '0x07299936d304c153f6443dfa05f40ff007d72911b6f72307f996231605b91562'
+      },
+      {
+        type: Quantity,
+        desc: 'The V field of the signature.',
+        example: '0x1b'
+      }
+    ],
+    returns: {
+      type: RecoveredAccount,
+      desc: 'Information recovered from the signature',
+      example: {
+        address: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
+        publicKey:
+          '0x3fa8c08c65a83f6b4ea3e04e1cc70cbe3cd391499e3e05ab7dedf28aff9afc538200ff93e3f2b2cb5029f03c7ebee820d63a4c5a9541c83acebe293f54cacf0e',
+        isValidForCurrentChain: false
+      }
+    }
+  },
+
   composeTransaction: {
-    desc: 'Given partial transaction request produces transaction with all fields filled in. Such transaction can be then signed externally.',
+    desc:
+      'Given partial transaction request produces transaction with all fields filled in. Such transaction can be then signed externally.',
     params: [
       {
         type: TransactionRequest,
@@ -2009,11 +2008,13 @@ module.exports = {
   },
 
   getBlockHeaderByNumber: {
-    desc: 'Get block header. Same as [`eth_getBlockByNumber`](JSONRPC-eth-module#eth_getblockbynumber) but without uncles and transactions.',
+    desc:
+      'Get block header. Same as [`eth_getBlockByNumber`](JSONRPC-eth-module#eth_getblockbynumber) but without uncles and transactions.',
     params: [
       {
         type: BlockNumber,
-        desc: 'integer of a block number, or the string `\'earliest\'`, `\'latest\'` or `\'pending\'`, as in the [default block parameter](#the-default-block-parameter).',
+        desc:
+          "integer of a block number, or the string `'earliest'`, `'latest'` or `'pending'`, as in the default block parameter.",
         example: fromDecimal(436)
       }
     ],
@@ -2027,7 +2028,8 @@ module.exports = {
         gasLimit: '0x1388',
         gasUsed: '0x0',
         hash: '0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
-        logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+        logsBloom:
+          '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
         miner: '0xbb7b8287f3f0a933474a79eae42cbca977791171',
         mixHash: '0x4fffe9ae21f1c9e15207b1f472d5bbdd68c9595d461666602f2be20daf5e7843',
         nonce: '0x689056015818adbe',
@@ -2041,6 +2043,75 @@ module.exports = {
         timestamp: '0x55ba467c',
         transactionsRoot: '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'
       }
+    }
+  },
+
+  submitWorkDetail: {
+    desc:
+      'Used for submitting a proof-of-work solution. Similar to `eth_submitWork` but will return the block hash on success, and return an explicit error message on failure.',
+    params: [
+      {
+        type: Data,
+        desc: '8 Bytes - The nonce found (64 bits).',
+        example: '0x0000000000000001'
+      },
+      {
+        type: Data,
+        desc: "32 Bytes - The header's pow-hash (256 bits)",
+        example: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+      },
+      {
+        type: Data,
+        desc: '32 Bytes - The mix digest (256 bits).',
+        example: '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000'
+      }
+    ],
+    returns: {
+      type: Hash,
+      desc: 'Hash of the submitted block if successful',
+      example: '0x07a992176ab51ee50539c1ba287bef937fe49c9a96dafa03954fb6fefa594691'
+    }
+  },
+
+  //   nodeStatus: {
+  //     desc:
+  //       'Determines the health of the node. Returns an error in case the node is not connected to any peers (except for dev chain) or is still syncing.',
+  //     params: [],
+  //     returns: {
+  //       type: null,
+  //       desc: 'A successful response is with no content is generated in case the node is operating correctly',
+  //       example: null
+  //     }
+  //   },
+
+  lockedHardwareAccountsInfo: {
+    desc: 'Provides a list of paths to locked hardware wallets',
+    params: [],
+    returns: {
+      type: Array,
+      desc: 'Paths of all locked hardware wallets',
+      example: "['/dev/hidraw0']"
+    }
+  },
+
+  hardwarePinMatrixAck: {
+    desc: 'Send a pin to a hardware wallet at a specific path to unlock it',
+    params: [
+      {
+        type: String,
+        desc: 'path to the device',
+        example: 'USB_2b24_0001_14100000'
+      },
+      {
+        type: String,
+        desc: 'the pin as recieved from the pin matrix',
+        example: '1234'
+      }
+    ],
+    returns: {
+      type: Boolean,
+      desc: 'Whether or not the pin entry successfully unlocked the device',
+      example: true
     }
   },
 
@@ -2063,18 +2134,22 @@ module.exports = {
   // Pub-Sub
   subscribe: {
     subdoc: SUBDOC_PUBSUB,
+    pubsub: true,
     desc: `
 Starts a subscription (on WebSockets / IPC / TCP transports) to results of calling some other RPC method.
 For every change in returned value of that RPC call a JSON-RPC notification with result and subscription ID will be sent to a client.
 
-An example notification received by subscribing to \`eth_accounts\` RPC method:
+
+Below examples use \`wscat\`, a simple command line WebSockets client. Find out how to install and use it by visiting [wscat GitHub repository](https://github.com/websockets/wscat).
+
+An example notification received by subscribing to \`eth_getBalance\` RPC method:
 \`\`\`
 {"jsonrpc":"2.0","method":"parity_subscription","params":{"subscription":"0x416d77337e24399d","result":["0xcd2a3d9f938e13cd947ec05abc7fe734df8dd826"]}}
 \`\`\`
 
 You can unsubscribe using \`parity_unsubscribe\` RPC method. Subscriptions are also tied to a transport
 connection, disconnecting causes all subscriptions to be canceled.
-    `,
+`,
     params: [
       {
         type: String,
@@ -2095,17 +2170,19 @@ connection, disconnecting causes all subscriptions to be canceled.
   },
   unsubscribe: {
     subdoc: SUBDOC_PUBSUB,
+    pubsub: true,
     desc: 'Unsubscribes from a subscription.',
-    params: [{
-      type: String,
-      desc: 'Subscription ID',
-      example: '0x416d77337e24399d'
-    }],
+    params: [
+      {
+        type: String,
+        desc: 'Subscription ID',
+        example: '0x416d77337e24399d'
+      }
+    ],
     returns: {
       type: Boolean,
       desc: 'whether the call was successful',
       example: true
     }
   }
-
 };
