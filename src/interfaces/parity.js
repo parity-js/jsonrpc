@@ -200,7 +200,7 @@ module.exports = {
     params: [],
     returns: {
       type: String,
-      decs: 'Current log level.',
+      desc: 'Current log level.',
       example: 'debug'
     }
   },
@@ -932,7 +932,7 @@ module.exports = {
   },
 
   call: {
-    decs:
+    desc:
       'perform multiple `eth_call` requests on top of each other, i.e. transaction n will be executed on top of a pending block with all n-1 transactions applied first. Allows to get a result of execution of dependent transactions.',
     params: [
       {
@@ -1813,7 +1813,7 @@ module.exports = {
       },
       {
         type: Data,
-        desc: 'The message',
+        desc: 'The message.',
         example: '0x414243'
       }
     ],

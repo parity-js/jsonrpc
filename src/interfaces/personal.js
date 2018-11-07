@@ -238,12 +238,12 @@ module.exports = {
     params: [
       {
         type: String,
-        desc: 'EIP-191 version specifier',
+        desc: 'EIP-191 version specifier, `0x00` for pre-signed transactions, `0x01` for structured data(EIP712), `0x45` for personal messages',
         example: '0x00'
       },
       {
         type: EIP191,
-        desc: 'data to be signed, depending on the version specified in the first argument',
+        desc: 'Data to be signed, depending on the version specified in the first argument. `PresignedTransaction`, `EIP712` or `Data`',
         example: {
           validator: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
           data:
