@@ -23,19 +23,19 @@ const {
   TransactionRequest,
   TransactionResponse,
   RecoveredAccount
-} = require('../types')
-const { fromDecimal, withComment, Dummy } = require('../helpers')
+} = require('../types');
+const { fromDecimal, withComment, Dummy } = require('../helpers');
 
-const SECTION_ACCOUNTS = 'Accounts (read-only) and Signatures'
-const SECTION_DEV = 'Development'
-const SECTION_MINING = 'Block Authoring (aka "mining")'
-const SECTION_NET = 'Network Information'
-const SECTION_NODE = 'Node Settings'
-const SECTION_VAULT = 'Account Vaults'
+const SECTION_ACCOUNTS = 'Accounts (read-only) and Signatures';
+const SECTION_DEV = 'Development';
+const SECTION_MINING = 'Block Authoring (aka "mining")';
+const SECTION_NET = 'Network Information';
+const SECTION_NODE = 'Node Settings';
+const SECTION_VAULT = 'Account Vaults';
 
-const SUBDOC_SET = 'set'
-const SUBDOC_ACCOUNTS = 'accounts'
-const SUBDOC_PUBSUB = 'pubsub'
+const SUBDOC_SET = 'set';
+const SUBDOC_ACCOUNTS = 'accounts';
+const SUBDOC_PUBSUB = 'pubsub';
 
 module.exports = {
   accountsInfo: {
@@ -2073,16 +2073,16 @@ module.exports = {
     }
   },
 
-//   nodeStatus: {
-//     desc:
-//       'Determines the health of the node. Returns an error in case the node is not connected to any peers (except for dev chain) or is still syncing.',
-//     params: [],
-//     returns: {
-//       type: null,
-//       desc: 'A successful response is with no content is generated in case the node is operating correctly',
-//       example: null
-//     }
-//   },
+  //   nodeStatus: {
+  //     desc:
+  //       'Determines the health of the node. Returns an error in case the node is not connected to any peers (except for dev chain) or is still syncing.',
+  //     params: [],
+  //     returns: {
+  //       type: null,
+  //       desc: 'A successful response is with no content is generated in case the node is operating correctly',
+  //       example: null
+  //     }
+  //   },
 
   lockedHardwareAccountsInfo: {
     desc: 'Provides a list of paths to locked hardware wallets',
@@ -2185,4 +2185,4 @@ connection, disconnecting causes all subscriptions to be canceled.
       example: true
     }
   }
-}
+};
