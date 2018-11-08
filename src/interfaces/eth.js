@@ -232,6 +232,7 @@ The following methods have an optional extra \`defaultBlock\` parameter:
 - [eth_estimateGas](#eth_estimategas)
 - [eth_getBalance](#eth_getbalance)
 - [eth_getCode](#eth_getcode)
+- [eth_getProof](#eth_getproof)
 - [eth_getTransactionCount](#eth_gettransactioncount)
 - [eth_getStorageAt](#eth_getstorageat)
 - [eth_call](#eth_call)
@@ -358,6 +359,89 @@ The following options are possible for the \`defaultBlock\` parameter:
         desc: 'integer of the current balance in wei.',
         format: 'outputBigNumberFormatter',
         example: '0x0234c8a3397aab58'
+      }
+    },
+
+    getProof: {
+      desc: 'Returns the account- and storage-values of the specified account including the Merkle-proof.',
+      params: [
+        {
+          type: Address,
+          desc: '20 Bytes - address to check for proof.',
+          format: 'inputAddressFormatter',
+          example: '0x407d73d8a49eeb85d32cf465507dd71d507100c1'
+        },
+        {
+          type: Array,
+          desc: 'array of storage-keys which should be proofed and included. See eth_getStorageAt',
+          optional: true,
+          example: ['0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421']
+        },
+        {
+          type: BlockNumber,
+          desc: 'integer block number, or the string `\'latest\'`, `\'earliest\'` or `\'pending\'`, see the [default block parameter](#the-default-block-parameter).',
+          format: 'inputDefaultBlockNumberFormatter',
+          optional: true,
+          example: 'latest'
+
+        }
+      ],
+      returns: {
+        type: Object,
+        desc: 'A account object including the Merkle-Proof.',
+        details: {
+          balance: {
+            type: Quantity,
+            desc: 'the Balance of the Account'
+          },
+          codeHash: {
+            type: Hash,
+            desc: 'hash of the code of the account. For a simple Account without code it will return "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"'
+          },
+          nonce: {
+            type: Quantity,
+            desc: 'nonce of the account'
+          },
+          storageHash: {
+            type: Hash,
+            desc: 'SHA3 of the StorageRoot. All storage will deliver a MerkleProof starting with this rootHash.'
+          },
+          accountProof: {
+            type: Array,
+            desc: 'Array of rlp-serialized MerkleTree-Nodes, starting with the stateRoot-Node, following the path of the SHA3 (address) as key.'
+          },
+          storageProof: {
+            type: Array,
+            desc: 'Array of storage-entries as requested. Each entry is a object'
+          }
+        },
+        example: {
+          "id": 1,
+          "jsonrpc": "2.0",
+          "result": {
+            "accountProof": [
+              "0xf90211a...0701bc80",
+              "0xf90211a...0d832380",
+              "0xf90211a...5fb20c80",
+              "0xf90211a...0675b80",
+              "0xf90151a0...ca08080"
+            ],
+            "balance": "0x0",
+            "codeHash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+            "nonce": "0x0",
+            "storageHash": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+            "storageProof": [
+              {
+                "key": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+                "proof": [
+                  "0xf90211a...0701bc80",
+                  "0xf90211a...0d832380"
+                ],
+                "value": "0x1"
+              }
+            ]
+          }
+        }
       }
     },
 
