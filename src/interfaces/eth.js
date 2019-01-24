@@ -1237,6 +1237,26 @@ Subscription type-specific parameters. It must be left empty for
           fromBlock: 'latest',
           toBlock: 'latest'
         }
+      ],
+      returns: {
+        type: String,
+        desc: 'Assigned subscription ID',
+        example: '0xb53c4832f1dca4a5'
+      }
+    },
+    unsubscribe: {
+      subdoc: SUBDOC_PUBSUB,
+      pubsub: true,
+      desc: 'Unsubscribes from a subscription.',
+      params: [{
+        type: String,
+        desc: 'Subscription ID',
+        example: '0xb53c4832f1dca4a5'
+      }],
+      returns: {
+        type: Boolean,
+        desc: 'whether the call was successful',
+        example: true
       }
     ],
     returns: {
