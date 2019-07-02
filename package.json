@@ -61,7 +61,7 @@
     "@babel/plugin-syntax-import-meta": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "chalk": "^2.0.1",
-    "eslint": "^5.9.0",
+    "eslint": "^6.0.1",
     "eslint-config-semistandard": "^11.0.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-react": "^7.0.2",
