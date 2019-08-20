@@ -72,7 +72,7 @@
     "lodash": "^4.17.4",
     "makeshift": "^1.1.0",
     "mkdirp": "^0.5.1",
-    "yargs": "^13.2.1"
+    "yargs": "^14.0.0"
   },
   "dependencies": {}
 }
