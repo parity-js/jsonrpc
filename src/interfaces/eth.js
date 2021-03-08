@@ -1252,7 +1252,7 @@ Subscription type-specific parameters. It must be left empty for
     params: [{
       type: String,
       desc: 'Subscription ID',
-      example: '0xb53c4832f1dca4a5un'
+      example: '0xb53c4832f1dca4a5'
     }],
     returns: {
       type: Boolean,
